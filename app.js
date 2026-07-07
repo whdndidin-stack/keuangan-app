@@ -1,23 +1,29 @@
+/* === DATA === */
 var transaksi=JSON.parse(localStorage.getItem("transaksi"))||[];
 var filterAktif="semua";
 var idHapus=null;
 var deferredPrompt=null;
+var katTabAktif="masuk";
 
+var defaultKatMasuk=["Gaji","Freelance","Investasi","Hadiah","Lainnya"];
+var defaultKatKeluar=["Makanan","Transportasi","Belanja","Tagihan","Hiburan","Kesehatan","Pendidikan","Lainnya"];
+
+var katMasuk=JSON.parse(localStorage.getItem("katMasuk"))||defaultKatMasuk.slice();
+var katKeluar=JSON.parse(localStorage.getItem("katKeluar"))||defaultKatKeluar.slice();
+
+/* === SERVICE WORKER === */
 if("serviceWorker" in navigator){
   window.addEventListener("load",function(){
-    navigator.serviceWorker.register("sw.js")
-    .then(function(r){console.log("SW OK")})
-    .catch(function(e){console.log("SW FAIL",e)});
+    navigator.serviceWorker.register("sw.js").catch(function(){});
   });
 }
 
+/* === INSTALL PWA === */
 window.addEventListener("beforeinstallprompt",function(e){
-  e.preventDefault();
-  deferredPrompt=e;
+  e.preventDefault();deferredPrompt=e;
   setTimeout(function(){
-    if(!localStorage.getItem("bannerOff")){
+    if(!localStorage.getItem("bannerOff"))
       document.getElementById("installBanner").classList.add("sh");
-    }
   },3000);
 });
 
@@ -25,7 +31,7 @@ document.getElementById("btnInstallApp").addEventListener("click",function(){
   if(!deferredPrompt){showToast("Sudah terinstall","wn");return;}
   deferredPrompt.prompt();
   deferredPrompt.userChoice.then(function(r){
-    if(r.outcome==="accepted"){showToast("Berhasil diinstall!","ok");}
+    if(r.outcome==="accepted")showToast("Berhasil diinstall!","ok");
     deferredPrompt=null;
     document.getElementById("installBanner").classList.remove("sh");
   });
@@ -36,10 +42,11 @@ document.getElementById("btnCloseBanner").addEventListener("click",function(){
   localStorage.setItem("bannerOff","1");
 });
 
+/* === INIT === */
 window.addEventListener("DOMContentLoaded",function(){
   document.getElementById("tanggal").valueAsDate=new Date();
   updateTanggal();
-  updateKategori("masuk");
+  renderKategoriSelect("masuk");
   renderAll();
 });
 
@@ -66,6 +73,115 @@ function showToast(msg,type){
   setTimeout(function(){t.remove();},3000);
 }
 
+/* === KATEGORI MANAGEMENT === */
+function simpanKategori(){
+  localStorage.setItem("katMasuk",JSON.stringify(katMasuk));
+  localStorage.setItem("katKeluar",JSON.stringify(katKeluar));
+}
+
+function renderKategoriSelect(jenis){
+  var sel=document.getElementById("kategori");
+  var list=jenis==="masuk"?katMasuk:katKeluar;
+  sel.innerHTML="";
+  for(var i=0;i<list.length;i++){
+    var opt=document.createElement("option");
+    opt.value=list[i];
+    opt.textContent=list[i];
+    sel.appendChild(opt);
+  }
+}
+
+function bukaKategori(){
+  katTabAktif=document.getElementById("jenisTransaksi").value;
+  document.getElementById("modalKategori").classList.add("a");
+  document.body.style.overflow="hidden";
+  updateKatTabs();
+  renderKatList();
+}
+
+function tutupKategori(){
+  document.getElementById("modalKategori").classList.remove("a");
+  document.body.style.overflow="";
+  document.getElementById("katInput").value="";
+  var jenis=document.getElementById("jenisTransaksi").value;
+  renderKategoriSelect(jenis);
+}
+
+function switchKatTab(jenis){
+  katTabAktif=jenis;
+  updateKatTabs();
+  renderKatList();
+}
+
+function updateKatTabs(){
+  document.getElementById("katTabMasuk").className=katTabAktif==="masuk"?"kat-tab a":"kat-tab";
+  document.getElementById("katTabKeluar").className=katTabAktif==="keluar"?"kat-tab a":"kat-tab";
+}
+
+function renderKatList(){
+  var ul=document.getElementById("katList");
+  var list=katTabAktif==="masuk"?katMasuk:katKeluar;
+  if(!list.length){
+    ul.innerHTML='<div class="kat-empty">Belum ada kategori</div>';
+    return;
+  }
+  var html="";
+  for(var i=0;i<list.length;i++){
+    html+='<li class="kat-item"><span>'+list[i]+'</span>';
+    html+='<button class="kat-del" onclick="hapusKategori(\''+list[i].replace(/'/g,"\\\'")+'\')">\u{1F5D1}</button></li>';
+  }
+  ul.innerHTML=html;
+}
+
+function tambahKategori(){
+  var input=document.getElementById("katInput");
+  var nama=input.value.trim();
+  if(!nama){showToast("Nama kategori kosong!","er");return;}
+
+  var list=katTabAktif==="masuk"?katMasuk:katKeluar;
+  for(var i=0;i<list.length;i++){
+    if(list[i].toLowerCase()===nama.toLowerCase()){
+      showToast("Kategori sudah ada!","er");return;
+    }
+  }
+
+  list.push(nama);
+  simpanKategori();
+  renderKatList();
+  input.value="";
+  showToast("Kategori '"+nama+"' ditambahkan!","ok");
+}
+
+function hapusKategori(nama){
+  var list=katTabAktif==="masuk"?katMasuk:katKeluar;
+  var idx=-1;
+  for(var i=0;i<list.length;i++){
+    if(list[i]===nama){idx=i;break;}
+  }
+  if(idx===-1)return;
+
+  if(list.length<=1){
+    showToast("Minimal harus ada 1 kategori!","er");
+    return;
+  }
+
+  list.splice(idx,1);
+  simpanKategori();
+  renderKatList();
+  showToast("Kategori '"+nama+"' dihapus!","wn");
+}
+
+/* Keyboard enter di input kategori */
+document.getElementById("katInput").addEventListener("keydown",function(e){
+  if(e.key==="Enter"){e.preventDefault();tambahKategori();}
+});
+
+/* Klik overlay modal kategori */
+document.getElementById("modalKategori").addEventListener("click",function(e){
+  if(e.target===this)tutupKategori();
+});
+
+/* === TAB PEMASUKAN / PENGELUARAN === */
 function switchTab(j){
   document.getElementById("jenisTransaksi").value=j;
   document.getElementById("tabMasuk").className=j==="masuk"?"tb a":"tb";
@@ -73,15 +189,10 @@ function switchTab(j){
   var mob=innerWidth<500;
   document.getElementById("btnSubmit").textContent=j==="masuk"?(mob?"+ Pemasukan":"+ Tambah Pemasukan"):(mob?"+ Pengeluaran":"+ Tambah Pengeluaran");
   document.getElementById("btnSubmit").className=j==="masuk"?"bt bs":"bt bp";
-  updateKategori(j);
+  renderKategoriSelect(j);
 }
 
-function updateKategori(j){
-  document.getElementById("optMasuk").style.display=j==="masuk"?"":"none";
-  document.getElementById("optKeluar").style.display=j==="keluar"?"":"none";
-  document.getElementById("kategori").value=j==="masuk"?"Gaji":"Makanan";
-}
-
+/* === TRANSAKSI === */
 function tambahTransaksi(e){
   e.preventDefault();
   var j=document.getElementById("jenisTransaksi").value;
@@ -142,7 +253,6 @@ function renderTransaksi(){
   var list=document.getElementById("transactionList");
   var kw=document.getElementById("searchInput").value.toLowerCase();
   var data=transaksi.slice();
-
   if(filterAktif==="masuk")data=data.filter(function(t){return t.jenis==="masuk";});
   if(filterAktif==="keluar")data=data.filter(function(t){return t.jenis==="keluar";});
   if(kw)data=data.filter(function(t){return t.keterangan.toLowerCase().indexOf(kw)>-1||t.kategori.toLowerCase().indexOf(kw)>-1;});
@@ -155,8 +265,7 @@ function renderTransaksi(){
   var mob=innerWidth<500;
   var html="";
   for(var i=0;i<data.length;i++){
-    var t=data[i];
-    var im=t.jenis==="masuk";
+    var t=data[i];var im=t.jenis==="masuk";
     var d=new Date(t.tanggal);
     var tgl=d.toLocaleDateString("id-ID",{day:"numeric",month:"short",year:mob?"2-digit":"numeric"});
     html+='<div class="ti">';
@@ -194,38 +303,25 @@ function renderChart(){
   con.innerHTML=html;
 }
 
+/* === MODAL HAPUS === */
 function bukaModal(id,nama,jumlah){
   idHapus=id;
   document.getElementById("modalText").textContent='Hapus "'+nama+'" senilai '+formatRp(jumlah)+"?";
   document.getElementById("modalHapus").classList.add("a");
   document.body.style.overflow="hidden";
 }
-
 function tutupModal(){
   document.getElementById("modalHapus").classList.remove("a");
-  idHapus=null;
-  document.body.style.overflow="";
+  idHapus=null;document.body.style.overflow="";
 }
-
 function konfirmasiHapus(){
   if(idHapus!==null){
     transaksi=transaksi.filter(function(t){return t.id!==idHapus;});
-    simpanData();renderAll();
-    showToast("Transaksi dihapus!","wn");
-    tutupModal();
+    simpanData();renderAll();showToast("Transaksi dihapus!","wn");tutupModal();
   }
 }
+document.getElementById("modalHapus").addEventListener("click",function(e){if(e.target===this)tutupModal();});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){tutupModal();tutupKategori();}});
 
-document.getElementById("modalHapus").addEventListener("click",function(e){
-  if(e.target===this)tutupModal();
-});
-
-document.addEventListener("keydown",function(e){
-  if(e.key==="Escape")tutupModal();
-});
-
-function simpanData(){
-  localStorage.setItem("transaksi",JSON.stringify(transaksi));
-}
-
+function simpanData(){localStorage.setItem("transaksi",JSON.stringify(transaksi));}
 window.addEventListener("resize",renderAll);

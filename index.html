@@ -106,7 +106,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
 @keyframes si{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes fo{from{opacity:1}to{opacity:0}}
 
-/* MODAL GENERAL */
 .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:500;justify-content:center;align-items:center;padding:20px}
 .mo.a{display:flex}
 .md{background:#fff;border-radius:12px;padding:24px;max-width:400px;width:100%;text-align:center;animation:mi .3s ease}
@@ -119,7 +118,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
 .bc{background:var(--g1);color:var(--g6)}
 .bd{background:var(--d);color:#fff}
 
-/* MODAL KATEGORI */
 .md-kat{max-width:480px;text-align:left;max-height:90vh;overflow-y:auto}
 .md-kat h3{text-align:center}
 .kat-tabs{display:flex;gap:6px;margin-bottom:16px}
@@ -190,7 +188,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
                 <form id="formTransaksi" onsubmit="return tambahTransaksi(event)">
                     <input type="hidden" id="jenisTransaksi" value="masuk">
                     <div class="fg"><label>Keterangan</label><input type="text" id="keterangan" placeholder="Contoh: Gaji bulanan" required></div>
-                    <div class="fg"><label>Jumlah (Rp)</label><input type="number" id="jumlah" placeholder="5000000" min="1" required></div>
+                    <div class="fg"><label>Jumlah (Rp)</label><input type="text" inputmode="numeric" id="jumlah" placeholder="5.000.000" oninput="formatInputJumlah(this)" required></div>
                     <div class="fg">
                         <label>Kategori <button type="button" class="gear-btn" onclick="bukaKategori()" title="Edit Kategori">&#9881;&#65039;</button></label>
                         <select id="kategori"></select>
@@ -221,7 +219,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
     </div>
 </div>
 
-<!-- Modal Hapus -->
 <div class="mo" id="modalHapus">
     <div class="md">
         <h3>Hapus Transaksi?</h3>
@@ -233,7 +230,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
     </div>
 </div>
 
-<!-- Modal Kategori -->
 <div class="mo" id="modalKategori">
     <div class="md md-kat">
         <h3>&#9881;&#65039; Edit Kategori</h3>

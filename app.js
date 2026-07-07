@@ -53,10 +53,7 @@ document.getElementById("btnCloseBanner").onclick = function () {
    INIT
    ============================================= */
 document.addEventListener("DOMContentLoaded", function () {
-    // Migrate data lama jika ada
     migrateData();
-
-    // Setup
     isiDropdown();
     document.getElementById("tanggal").valueAsDate = new Date();
     isiKatSelect("masuk");
@@ -64,9 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
     showPage("dashboard");
 });
 
-// Migrasi dari localStorage key lama ke baru
 function migrateData() {
-    // Jika TX kosong, coba ambil dari key lama
     if (TX.length === 0) {
         var old = localStorage.getItem("transaksi");
         if (old) {
@@ -79,19 +74,13 @@ function migrateData() {
             } catch (e) {}
         }
     }
-
-    // Migrasi kategori
     if (!localStorage.getItem("katM")) {
-        var oldKatM = localStorage.getItem("katMasuk");
-        if (oldKatM) {
-            try { katM = JSON.parse(oldKatM); simpanKat(); } catch (e) {}
-        }
+        var oldM = localStorage.getItem("katMasuk");
+        if (oldM) { try { katM = JSON.parse(oldM); simpanKat(); } catch (e) {} }
     }
     if (!localStorage.getItem("katK")) {
-        var oldKatK = localStorage.getItem("katKeluar");
-        if (oldKatK) {
-            try { katK = JSON.parse(oldKatK); simpanKat(); } catch (e) {}
-        }
+        var oldK = localStorage.getItem("katKeluar");
+        if (oldK) { try { katK = JSON.parse(oldK); simpanKat(); } catch (e) {} }
     }
 }
 
@@ -120,27 +109,26 @@ function isiDropdown() {
         bulanHTML += '<option value="' + (i + 1) + '">' + namaBulan[i] + '</option>';
     }
 
-    var tahunSekarang = new Date().getFullYear();
+    var now = new Date();
+    var tahunSekarang = now.getFullYear();
+    var bulanSekarang = String(now.getMonth() + 1);
+
     var tahunHTML = '<option value="0">Semua Tahun</option>';
     for (var y = tahunSekarang; y >= tahunSekarang - 10; y--) {
         tahunHTML += '<option value="' + y + '">' + y + '</option>';
     }
 
-    // Set grafik dropdown
-    var gB = document.getElementById("grafikBulan");
-    var gT = document.getElementById("grafikTahun");
-    gB.innerHTML = bulanHTML;
-    gT.innerHTML = tahunHTML;
-    gB.value = String(new Date().getMonth() + 1);
-    gT.value = String(tahunSekarang);
+    // Grafik - default bulan & tahun sekarang
+    document.getElementById("grafikBulan").innerHTML = bulanHTML;
+    document.getElementById("grafikTahun").innerHTML = tahunHTML;
+    document.getElementById("grafikBulan").value = bulanSekarang;
+    document.getElementById("grafikTahun").value = String(tahunSekarang);
 
-    // Set riwayat dropdown
-    var rB = document.getElementById("riwayatBulan");
-    var rT = document.getElementById("riwayatTahun");
-    rB.innerHTML = bulanHTML;
-    rT.innerHTML = tahunHTML;
-    rB.value = "0";
-    rT.value = "0";
+    // Riwayat - default bulan & tahun sekarang (SAMA seperti grafik)
+    document.getElementById("riwayatBulan").innerHTML = bulanHTML;
+    document.getElementById("riwayatTahun").innerHTML = tahunHTML;
+    document.getElementById("riwayatBulan").value = bulanSekarang;
+    document.getElementById("riwayatTahun").value = String(tahunSekarang);
 }
 
 /* =============================================
@@ -183,35 +171,23 @@ function toast(msg, tipe) {
 
 /* =============================================
    FUNGSI FILTER DATA
-   jenis: "semua" | "masuk" | "keluar"
-   bulan: "0" = semua, "1"-"12" = bulan tertentu
-   tahun: "0" = semua, "2024" dst = tahun tertentu
    ============================================= */
 function getData(jenis, bulan, tahun) {
     var hasil = [];
-    var filterBulan = parseInt(bulan) || 0;
-    var filterTahun = parseInt(tahun) || 0;
+    var fBulan = parseInt(bulan) || 0;
+    var fTahun = parseInt(tahun) || 0;
 
     for (var i = 0; i < TX.length; i++) {
         var item = TX[i];
 
-        // Filter jenis
-        if (jenis !== "semua" && item.jenis !== jenis) {
-            continue;
-        }
+        if (jenis !== "semua" && item.jenis !== jenis) continue;
 
-        // Filter bulan dan tahun
-        if (filterBulan > 0 || filterTahun > 0) {
+        if (fBulan > 0 || fTahun > 0) {
             var tgl = new Date(item.tanggal);
-            var itemBulan = tgl.getMonth() + 1;
-            var itemTahun = tgl.getFullYear();
-
-            if (filterBulan > 0 && itemBulan !== filterBulan) {
-                continue;
-            }
-            if (filterTahun > 0 && itemTahun !== filterTahun) {
-                continue;
-            }
+            var iBulan = tgl.getMonth() + 1;
+            var iTahun = tgl.getFullYear();
+            if (fBulan > 0 && iBulan !== fBulan) continue;
+            if (fTahun > 0 && iTahun !== fTahun) continue;
         }
 
         hasil.push(item);
@@ -225,86 +201,61 @@ function getData(jenis, bulan, tahun) {
 function showPage(page) {
     curPage = page;
 
-    // Hide semua page
     var allPages = document.querySelectorAll(".page");
-    for (var i = 0; i < allPages.length; i++) {
-        allPages[i].classList.remove("active");
-    }
+    for (var i = 0; i < allPages.length; i++) allPages[i].classList.remove("active");
 
-    // Remove active dari semua nav
     var allNavs = document.querySelectorAll(".nav-item, .nav-fab");
-    for (var i = 0; i < allNavs.length; i++) {
-        allNavs[i].classList.remove("active");
-    }
+    for (var i = 0; i < allNavs.length; i++) allNavs[i].classList.remove("active");
 
-    // Map page ke element ID
     var pageId = {
-        dashboard: "pageDashboard",
-        grafik: "pageGrafik",
-        input: "pageInput",
-        riwayat: "pageRiwayat",
-        kategori: "pageKategori"
+        dashboard: "pageDashboard", grafik: "pageGrafik",
+        input: "pageInput", riwayat: "pageRiwayat", kategori: "pageKategori"
     };
     var navId = {
-        dashboard: "navDashboard",
-        grafik: "navGrafik",
-        input: "navInput",
-        riwayat: "navRiwayat",
-        kategori: "navKategori"
+        dashboard: "navDashboard", grafik: "navGrafik",
+        input: "navInput", riwayat: "navRiwayat", kategori: "navKategori"
     };
     var judul = {
-        dashboard: "\u{1F4BC} Dashboard",
-        grafik: "\u{1F4CA} Grafik",
-        input: "\u2795 Input Data",
-        riwayat: "\u{1F4CB} Riwayat",
+        dashboard: "\u{1F4BC} Dashboard", grafik: "\u{1F4CA} Grafik",
+        input: "\u2795 Input Data", riwayat: "\u{1F4CB} Riwayat",
         kategori: "\u{1F4CA} Kategori"
     };
 
-    // Aktifkan page & nav
     document.getElementById(pageId[page]).classList.add("active");
     document.getElementById(navId[page]).classList.add("active");
     document.getElementById("pageTitle").innerHTML = judul[page] || "";
 
-    // Render
     renderSaldo();
-
     switch (page) {
         case "dashboard": renderDashboard(); break;
         case "grafik": renderGrafik(); break;
         case "riwayat": renderRiwayat(); break;
         case "kategori": renderKatPage(); break;
     }
-
     window.scrollTo(0, 0);
 }
 
 /* =============================================
-   RENDER SALDO (semua data, tanpa filter)
+   RENDER SALDO
    ============================================= */
 function renderSaldo() {
-    var totalMasuk = 0, totalKeluar = 0, cMasuk = 0, cKeluar = 0;
+    var tm = 0, tk = 0, cm = 0, ck = 0;
     for (var i = 0; i < TX.length; i++) {
-        if (TX[i].jenis === "masuk") {
-            totalMasuk += TX[i].jumlah;
-            cMasuk++;
-        } else {
-            totalKeluar += TX[i].jumlah;
-            cKeluar++;
-        }
+        if (TX[i].jenis === "masuk") { tm += TX[i].jumlah; cm++; }
+        else { tk += TX[i].jumlah; ck++; }
     }
-    document.getElementById("saldoAkhir").textContent = rp(totalMasuk - totalKeluar);
-    document.getElementById("totalMasuk").textContent = rp(totalMasuk);
-    document.getElementById("totalKeluar").textContent = rp(totalKeluar);
+    document.getElementById("saldoAkhir").textContent = rp(tm - tk);
+    document.getElementById("totalMasuk").textContent = rp(tm);
+    document.getElementById("totalKeluar").textContent = rp(tk);
     document.getElementById("totalTransaksi").textContent = TX.length + " transaksi";
-    document.getElementById("countMasuk").textContent = cMasuk + " transaksi";
-    document.getElementById("countKeluar").textContent = cKeluar + " transaksi";
+    document.getElementById("countMasuk").textContent = cm + " transaksi";
+    document.getElementById("countKeluar").textContent = ck + " transaksi";
 }
 
 function hitungSaldo() {
     var s = 0;
     for (var i = 0; i < TX.length; i++) {
-        if (TX[i].jenis === "masuk") s += TX[i].jumlah;
-        else s -= TX[i].jumlah;
+        if (TX[i].jenis === "masuk") s += TX[i].jumlah; else s -= TX[i].jumlah;
     }
     return s;
 }
@@ -315,24 +266,19 @@ function hitungSaldo() {
 function renderDashboard() {
     var el = document.getElementById("recentList");
     var data = TX.slice(0, 5);
-
     if (!data.length) {
         el.innerHTML = '<div class="es"><div class="ei">\u{1F4ED}</div><p>Belum ada transaksi.</p></div>';
         return;
     }
-
     var h = "";
     for (var i = 0; i < data.length; i++) {
         var t = data[i];
         var im = t.jenis === "masuk";
-        var tgl = new Date(t.tanggal).toLocaleDateString("id-ID", {
-            day: "numeric", month: "short"
-        });
+        var tgl = new Date(t.tanggal).toLocaleDateString("id-ID", { day: "numeric", month: "short" });
         h += '<div class="ti">';
         h += '<div class="tic ' + (im ? "m" : "k") + '">' + (im ? "\u{1F4C8}" : "\u{1F4C9}") + '</div>';
         h += '<div class="tif"><div class="tn">' + t.keterangan + '</div>';
-        h += '<div class="tm"><span>' + tgl + '</span>';
-        h += '<span class="tg ' + (im ? "m" : "k") + '">' + t.kategori + '</span></div></div>';
+        h += '<div class="tm"><span>' + tgl + '</span><span class="tg ' + (im ? "m" : "k") + '">' + t.kategori + '</span></div></div>';
         h += '<div class="ta ' + (im ? "m" : "k") + '">' + (im ? "+" : "-") + rp(t.jumlah) + '</div>';
         h += '</div>';
     }
@@ -346,18 +292,15 @@ function renderGrafik() {
     var bulan = document.getElementById("grafikBulan").value;
     var tahun = document.getElementById("grafikTahun").value;
 
-    // Summary
-    var dataMasuk = getData("masuk", bulan, tahun);
-    var dataKeluar = getData("keluar", bulan, tahun);
+    var dm = getData("masuk", bulan, tahun);
+    var dk = getData("keluar", bulan, tahun);
+    var sm = 0, sk = 0;
+    for (var i = 0; i < dm.length; i++) sm += dm[i].jumlah;
+    for (var i = 0; i < dk.length; i++) sk += dk[i].jumlah;
 
-    var sumMasuk = 0, sumKeluar = 0;
-    for (var i = 0; i < dataMasuk.length; i++) sumMasuk += dataMasuk[i].jumlah;
-    for (var i = 0; i < dataKeluar.length; i++) sumKeluar += dataKeluar[i].jumlah;
+    document.getElementById("chartMasuk").textContent = rp(sm);
+    document.getElementById("chartKeluar").textContent = rp(sk);
 
-    document.getElementById("chartMasuk").textContent = rp(sumMasuk);
-    document.getElementById("chartKeluar").textContent = rp(sumKeluar);
-
-    // Bar chart & Donut
     renderBarChart(tahun);
     renderDonutChart(bulan, tahun);
 }
@@ -369,42 +312,32 @@ function renderBarChart(tahunVal) {
     var thn = parseInt(tahunVal) || 0;
 
     if (thn > 0) {
-        // 12 bulan di tahun tersebut
-        for (var m = 1; m <= 12; m++) {
-            daftar.push({ bulan: m, tahun: thn });
-        }
+        for (var m = 1; m <= 12; m++) daftar.push({ bulan: m, tahun: thn });
     } else {
-        // 6 bulan terakhir
         for (var i = 5; i >= 0; i--) {
             var d = new Date(now.getFullYear(), now.getMonth() - i, 1);
             daftar.push({ bulan: d.getMonth() + 1, tahun: d.getFullYear() });
         }
     }
 
-    // Hitung per bulan
     var barData = [];
     var maxVal = 1;
-
     for (var i = 0; i < daftar.length; i++) {
         var bln = daftar[i].bulan;
         var thn2 = daftar[i].tahun;
         var masuk = 0, keluar = 0;
-
         for (var j = 0; j < TX.length; j++) {
             var dt = new Date(TX[j].tanggal);
             if (dt.getMonth() + 1 === bln && dt.getFullYear() === thn2) {
-                if (TX[j].jenis === "masuk") masuk += TX[j].jumlah;
-                else keluar += TX[j].jumlah;
+                if (TX[j].jenis === "masuk") masuk += TX[j].jumlah; else keluar += TX[j].jumlah;
             }
         }
-
         var label = new Date(thn2, bln - 1, 1).toLocaleDateString("id-ID", { month: "short" });
         barData.push({ label: label, masuk: masuk, keluar: keluar });
         if (masuk > maxVal) maxVal = masuk;
         if (keluar > maxVal) maxVal = keluar;
     }
 
-    // Render
     var h = "";
     for (var i = 0; i < barData.length; i++) {
         var d = barData[i];
@@ -426,73 +359,40 @@ function renderDonutChart(bulan, tahun) {
     var data = getData("keluar", bulan, tahun);
 
     ctx.clearRect(0, 0, 200, 200);
-
     if (!data.length) {
         ctx.fillStyle = "#e5e7eb";
-        ctx.beginPath();
-        ctx.arc(100, 100, 80, 0, Math.PI * 2);
-        ctx.arc(100, 100, 45, 0, Math.PI * 2, true);
-        ctx.fill();
-        ctx.fillStyle = "#9ca3af";
-        ctx.font = "13px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText("Belum ada data", 100, 105);
-        legend.innerHTML = "";
-        return;
+        ctx.beginPath(); ctx.arc(100, 100, 80, 0, Math.PI * 2); ctx.arc(100, 100, 45, 0, Math.PI * 2, true); ctx.fill();
+        ctx.fillStyle = "#9ca3af"; ctx.font = "13px Arial"; ctx.textAlign = "center"; ctx.fillText("Belum ada data", 100, 105);
+        legend.innerHTML = ""; return;
     }
 
-    // Hitung per kategori
-    var katMap = {};
-    var total = 0;
+    var katMap = {}, total = 0;
     for (var i = 0; i < data.length; i++) {
         var kat = data[i].kategori;
         katMap[kat] = (katMap[kat] || 0) + data[i].jumlah;
         total += data[i].jumlah;
     }
 
-    // Sort
     var entries = [];
-    for (var key in katMap) {
-        if (katMap.hasOwnProperty(key)) {
-            entries.push([key, katMap[key]]);
-        }
-    }
+    for (var key in katMap) { if (katMap.hasOwnProperty(key)) entries.push([key, katMap[key]]); }
     entries.sort(function (a, b) { return b[1] - a[1]; });
 
-    // Gambar slice
     var angle = -Math.PI / 2;
     for (var i = 0; i < entries.length; i++) {
         var slice = (entries[i][1] / total) * Math.PI * 2;
         ctx.fillStyle = COLORS[i % COLORS.length];
-        ctx.beginPath();
-        ctx.moveTo(100, 100);
-        ctx.arc(100, 100, 80, angle, angle + slice);
-        ctx.closePath();
-        ctx.fill();
+        ctx.beginPath(); ctx.moveTo(100, 100); ctx.arc(100, 100, 80, angle, angle + slice); ctx.closePath(); ctx.fill();
         angle += slice;
     }
 
-    // Lubang tengah
-    ctx.fillStyle = "#ffffff";
-    ctx.beginPath();
-    ctx.arc(100, 100, 45, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#1f2937";
-    ctx.font = "bold 13px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText(rp(total), 100, 98);
-    ctx.fillStyle = "#9ca3af";
-    ctx.font = "11px Arial";
-    ctx.fillText("Total", 100, 114);
+    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(100, 100, 45, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#1f2937"; ctx.font = "bold 13px Arial"; ctx.textAlign = "center"; ctx.fillText(rp(total), 100, 98);
+    ctx.fillStyle = "#9ca3af"; ctx.font = "11px Arial"; ctx.fillText("Total", 100, 114);
 
-    // Legend
     var lh = "";
     for (var i = 0; i < entries.length; i++) {
         var persen = ((entries[i][1] / total) * 100).toFixed(1);
-        lh += '<div class="donut-legend-item">';
-        lh += '<span class="dot" style="background:' + COLORS[i % COLORS.length] + '"></span>';
-        lh += entries[i][0] + ' (' + persen + '%)';
-        lh += '</div>';
+        lh += '<div class="donut-legend-item"><span class="dot" style="background:' + COLORS[i % COLORS.length] + '"></span>' + entries[i][0] + ' (' + persen + '%)</div>';
     }
     legend.innerHTML = lh;
 }
@@ -504,8 +404,7 @@ function switchTab(j) {
     document.getElementById("jenisTransaksi").value = j;
     document.getElementById("tabMasuk").className = j === "masuk" ? "tb a" : "tb";
     document.getElementById("tabKeluar").className = j === "keluar" ? "tb a" : "tb";
-    document.getElementById("btnSubmit").textContent =
-        j === "masuk" ? "+ Tambah Pemasukan" : "+ Tambah Pengeluaran";
+    document.getElementById("btnSubmit").textContent = j === "masuk" ? "+ Tambah Pemasukan" : "+ Tambah Pengeluaran";
     document.getElementById("btnSubmit").className = j === "masuk" ? "bt bs" : "bt bp";
     isiKatSelect(j);
 }
@@ -520,27 +419,17 @@ function tambahTransaksi(e) {
 
     if (!k) { toast("Keterangan kosong!", "er"); return false; }
     if (!n || n <= 0) { toast("Jumlah harus > 0!", "er"); return false; }
-    if (j === "keluar" && n > hitungSaldo()) {
-        toast("Saldo kurang! " + rp(hitungSaldo()), "er");
-        return false;
-    }
+    if (j === "keluar" && n > hitungSaldo()) { toast("Saldo kurang! " + rp(hitungSaldo()), "er"); return false; }
 
     TX.unshift({
-        id: Date.now(),
-        jenis: j,
-        keterangan: k,
-        jumlah: n,
-        kategori: c,
+        id: Date.now(), jenis: j, keterangan: k, jumlah: n, kategori: c,
         tanggal: tg || new Date().toISOString().split("T")[0]
     });
-
     simpan();
     toast((j === "masuk" ? "Pemasukan" : "Pengeluaran") + " " + rp(n) + " ditambahkan!", "ok");
-
     document.getElementById("keterangan").value = "";
     document.getElementById("jumlah").value = "";
     document.getElementById("tanggal").valueAsDate = new Date();
-
     setTimeout(function () { showPage("dashboard"); }, 800);
     return false;
 }
@@ -548,19 +437,11 @@ function tambahTransaksi(e) {
 /* =============================================
    PAGE 4: RIWAYAT TRANSAKSI
    ============================================= */
-
-// Fungsi untuk tab Semua / Masuk / Keluar
 function setJenis(j, btnEl) {
     jenisFilter = j;
-
-    // Update tombol aktif
     var btns = document.querySelectorAll("#pageRiwayat .ff");
-    for (var i = 0; i < btns.length; i++) {
-        btns[i].className = "ff";
-    }
+    for (var i = 0; i < btns.length; i++) btns[i].className = "ff";
     btnEl.className = "ff a";
-
-    // Re-render
     renderRiwayat();
 }
 
@@ -570,46 +451,36 @@ function renderRiwayat() {
     var bulan = document.getElementById("riwayatBulan").value;
     var tahun = document.getElementById("riwayatTahun").value;
 
-    // Ambil data sesuai filter jenis + tanggal
     var data = getData(jenisFilter, bulan, tahun);
 
-    // Filter keyword
     if (keyword !== "") {
         var filtered = [];
         for (var i = 0; i < data.length; i++) {
-            var namaLower = data[i].keterangan.toLowerCase();
-            var katLower = data[i].kategori.toLowerCase();
-            if (namaLower.indexOf(keyword) !== -1 || katLower.indexOf(keyword) !== -1) {
+            if (data[i].keterangan.toLowerCase().indexOf(keyword) !== -1 ||
+                data[i].kategori.toLowerCase().indexOf(keyword) !== -1) {
                 filtered.push(data[i]);
             }
         }
         data = filtered;
     }
 
-    // Render
     if (data.length === 0) {
         el.innerHTML = '<div class="es"><div class="ei">\u{1F4ED}</div><p>Tidak ada transaksi ditemukan.</p></div>';
         return;
     }
 
-    var isMobile = innerWidth < 500;
+    var mob = innerWidth < 500;
     var h = "";
     for (var i = 0; i < data.length; i++) {
         var t = data[i];
         var im = t.jenis === "masuk";
         var tgl = new Date(t.tanggal).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "short",
-            year: isMobile ? "2-digit" : "numeric"
+            day: "numeric", month: "short", year: mob ? "2-digit" : "numeric"
         });
-
         h += '<div class="ti">';
         h += '<div class="tic ' + (im ? "m" : "k") + '">' + (im ? "\u{1F4C8}" : "\u{1F4C9}") + '</div>';
-        h += '<div class="tif">';
-        h += '<div class="tn">' + t.keterangan + '</div>';
-        h += '<div class="tm"><span>' + tgl + '</span>';
-        h += '<span class="tg ' + (im ? "m" : "k") + '">' + t.kategori + '</span></div>';
-        h += '</div>';
+        h += '<div class="tif"><div class="tn">' + t.keterangan + '</div>';
+        h += '<div class="tm"><span>' + tgl + '</span><span class="tg ' + (im ? "m" : "k") + '">' + t.kategori + '</span></div></div>';
         h += '<div class="ta ' + (im ? "m" : "k") + '">' + (im ? "+" : "-") + rp(t.jumlah) + '</div>';
         h += '<button class="db" onclick="bukaModal(' + t.id + ',\'' + t.keterangan.replace(/'/g, "\\'") + '\',' + t.jumlah + ')">\u{1F5D1}</button>';
         h += '</div>';
@@ -622,17 +493,14 @@ function renderRiwayat() {
    ============================================= */
 function renderKatPage() {
     var el = document.getElementById("katCards");
-    var data = getData("keluar", "0", "0"); // Semua pengeluaran
+    var data = getData("keluar", "0", "0");
 
     if (data.length === 0) {
         el.innerHTML = '<div class="pn"><div class="es"><div class="ei">\u{1F4ED}</div><p>Belum ada pengeluaran.</p></div></div>';
         return;
     }
 
-    var katMap = {};
-    var counts = {};
-    var total = 0;
-
+    var katMap = {}, counts = {}, total = 0;
     for (var i = 0; i < data.length; i++) {
         var kat = data[i].kategori;
         katMap[kat] = (katMap[kat] || 0) + data[i].jumlah;
@@ -641,11 +509,7 @@ function renderKatPage() {
     }
 
     var entries = [];
-    for (var key in katMap) {
-        if (katMap.hasOwnProperty(key)) {
-            entries.push([key, katMap[key]]);
-        }
-    }
+    for (var key in katMap) { if (katMap.hasOwnProperty(key)) entries.push([key, katMap[key]]); }
     entries.sort(function (a, b) { return b[1] - a[1]; });
 
     var h = '<div class="pn" style="margin-bottom:16px"><div class="pb" style="text-align:center">';
@@ -655,24 +519,16 @@ function renderKatPage() {
     h += '</div></div>';
 
     for (var i = 0; i < entries.length; i++) {
-        var kat = entries[i][0];
-        var jml = entries[i][1];
+        var kat = entries[i][0], jml = entries[i][1];
         var p = ((jml / total) * 100).toFixed(1);
         var col = COLORS[i % COLORS.length];
-
         h += '<div class="kat-card">';
-        h += '<div class="kat-header">';
-        h += '<div class="kat-name"><span style="width:12px;height:12px;border-radius:3px;background:' + col + ';display:inline-block"></span> ' + kat + '</div>';
-        h += '<div class="kat-amount">' + rp(jml) + '</div>';
-        h += '</div>';
-        h += '<div style="display:flex;justify-content:space-between">';
-        h += '<div class="kat-persen">' + p + '% dari total</div>';
-        h += '<div class="kat-count">' + counts[kat] + ' transaksi</div>';
-        h += '</div>';
+        h += '<div class="kat-header"><div class="kat-name"><span style="width:12px;height:12px;border-radius:3px;background:' + col + ';display:inline-block"></span> ' + kat + '</div>';
+        h += '<div class="kat-amount">' + rp(jml) + '</div></div>';
+        h += '<div style="display:flex;justify-content:space-between"><div class="kat-persen">' + p + '% dari total</div><div class="kat-count">' + counts[kat] + ' transaksi</div></div>';
         h += '<div class="kat-bar"><div class="kat-fill" style="width:' + p + '%;background:' + col + '"></div></div>';
         h += '</div>';
     }
-
     el.innerHTML = h;
 }
 
@@ -685,9 +541,7 @@ function isiKatSelect(jenis) {
     sel.innerHTML = "";
     for (var i = 0; i < list.length; i++) {
         var opt = document.createElement("option");
-        opt.value = list[i];
-        opt.textContent = list[i];
-        sel.appendChild(opt);
+        opt.value = list[i]; opt.textContent = list[i]; sel.appendChild(opt);
     }
 }
 
@@ -695,8 +549,7 @@ function bukaKategori() {
     katMode = document.getElementById("jenisTransaksi").value;
     document.getElementById("modalKategori").classList.add("a");
     document.body.style.overflow = "hidden";
-    updKatTab();
-    renderKatEdit();
+    updKatTab(); renderKatEdit();
 }
 
 function tutupKategori() {
@@ -706,11 +559,7 @@ function tutupKategori() {
     isiKatSelect(document.getElementById("jenisTransaksi").value);
 }
 
-function switchKatTab(j) {
-    katMode = j;
-    updKatTab();
-    renderKatEdit();
-}
+function switchKatTab(j) { katMode = j; updKatTab(); renderKatEdit(); }
 
 function updKatTab() {
     document.getElementById("katTabM").className = katMode === "masuk" ? "kat-tab a" : "kat-tab";
@@ -720,39 +569,23 @@ function updKatTab() {
 function renderKatEdit() {
     var ul = document.getElementById("katList");
     var list = katMode === "masuk" ? katM : katK;
-
-    if (!list.length) {
-        ul.innerHTML = '<div class="kat-empty">Belum ada kategori</div>';
-        return;
-    }
-
+    if (!list.length) { ul.innerHTML = '<div class="kat-empty">Belum ada kategori</div>'; return; }
     var h = "";
     for (var i = 0; i < list.length; i++) {
-        h += '<li class="kat-item">';
-        h += '<span>' + list[i] + '</span>';
-        h += '<button class="kat-del" onclick="hapusKat(\'' + list[i].replace(/'/g, "\\'") + '\')">\u{1F5D1}</button>';
-        h += '</li>';
+        h += '<li class="kat-item"><span>' + list[i] + '</span>';
+        h += '<button class="kat-del" onclick="hapusKat(\'' + list[i].replace(/'/g, "\\'") + '\')">\u{1F5D1}</button></li>';
     }
     ul.innerHTML = h;
 }
 
 function tambahKat() {
-    var inp = document.getElementById("katInput");
-    var nama = inp.value.trim();
+    var inp = document.getElementById("katInput"), nama = inp.value.trim();
     if (!nama) { toast("Nama kosong!", "er"); return; }
-
     var list = katMode === "masuk" ? katM : katK;
     for (var i = 0; i < list.length; i++) {
-        if (list[i].toLowerCase() === nama.toLowerCase()) {
-            toast("Sudah ada!", "er");
-            return;
-        }
+        if (list[i].toLowerCase() === nama.toLowerCase()) { toast("Sudah ada!", "er"); return; }
     }
-
-    list.push(nama);
-    simpanKat();
-    renderKatEdit();
-    inp.value = "";
+    list.push(nama); simpanKat(); renderKatEdit(); inp.value = "";
     toast("'" + nama + "' ditambahkan!", "ok");
 }
 
@@ -761,9 +594,7 @@ function hapusKat(nama) {
     var idx = list.indexOf(nama);
     if (idx === -1) return;
     if (list.length <= 1) { toast("Minimal 1 kategori!", "er"); return; }
-    list.splice(idx, 1);
-    simpanKat();
-    renderKatEdit();
+    list.splice(idx, 1); simpanKat(); renderKatEdit();
     toast("'" + nama + "' dihapus!", "wn");
 }
 
@@ -775,7 +606,6 @@ function simpanKat() {
 document.getElementById("katInput").addEventListener("keydown", function (e) {
     if (e.key === "Enter") { e.preventDefault(); tambahKat(); }
 });
-
 document.getElementById("modalKategori").addEventListener("click", function (e) {
     if (e.target === this) tutupKategori();
 });
@@ -785,16 +615,14 @@ document.getElementById("modalKategori").addEventListener("click", function (e) 
    ============================================= */
 function bukaModal(id, nama, jumlah) {
     idHapus = id;
-    document.getElementById("modalText").textContent =
-        'Hapus "' + nama + '" senilai ' + rp(jumlah) + '?';
+    document.getElementById("modalText").textContent = 'Hapus "' + nama + '" senilai ' + rp(jumlah) + '?';
     document.getElementById("modalHapus").classList.add("a");
     document.body.style.overflow = "hidden";
 }
 
 function tutupModal() {
     document.getElementById("modalHapus").classList.remove("a");
-    idHapus = null;
-    document.body.style.overflow = "";
+    idHapus = null; document.body.style.overflow = "";
 }
 
 function konfirmasiHapus() {
@@ -803,33 +631,15 @@ function konfirmasiHapus() {
         for (var i = 0; i < TX.length; i++) {
             if (TX[i].id !== idHapus) baru.push(TX[i]);
         }
-        TX = baru;
-        simpan();
-        toast("Dihapus!", "wn");
-        tutupModal();
-        showPage(curPage);
+        TX = baru; simpan(); toast("Dihapus!", "wn"); tutupModal(); showPage(curPage);
     }
 }
 
-document.getElementById("modalHapus").addEventListener("click", function (e) {
-    if (e.target === this) tutupModal();
-});
-
-document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") {
-        tutupModal();
-        tutupKategori();
-    }
-});
+document.getElementById("modalHapus").addEventListener("click", function (e) { if (e.target === this) tutupModal(); });
+document.addEventListener("keydown", function (e) { if (e.key === "Escape") { tutupModal(); tutupKategori(); } });
 
 /* =============================================
    SIMPAN & RESIZE
    ============================================= */
-function simpan() {
-    localStorage.setItem("transaksi", JSON.stringify(TX));
-}
-
-window.addEventListener("resize", function () {
-    updateTanggal();
-    showPage(curPage);
-});
+function simpan() { localStorage.setItem("transaksi", JSON.stringify(TX)); }
+window.addEventListener("resize", function () { updateTanggal(); showPage(curPage); });

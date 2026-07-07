@@ -2,7 +2,7 @@
    DATA
    ============================================= */
 var TX = JSON.parse(localStorage.getItem("transaksi")) || [];
-var curPage = "dashboard";
+var curPage = localStorage.getItem("curPage") || "dashboard";
 var jenisFilter = "semua";
 var idHapus = null;
 var deferredPrompt = null;
@@ -58,7 +58,10 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("tanggal").valueAsDate = new Date();
     isiKatSelect("masuk");
     updateTanggal();
-    showPage("dashboard");
+
+    // Buka halaman terakhir yang dibuka (persist)
+    var savedPage = localStorage.getItem("curPage") || "dashboard";
+    showPage(savedPage, true);
 });
 
 function migrateData() {
@@ -188,12 +191,20 @@ function getData(jenis, bulan, tahun) {
 }
 
 /* =============================================
-   NAVIGASI
+   NAVIGASI HALAMAN
+   Parameter scrollTop:
+   - true  = scroll ke atas (pindah halaman via navbar)
+   - false = jangan scroll (refresh / resize)
    ============================================= */
-function showPage(page) {
+function showPage(page, scrollTop) {
     curPage = page;
+
+    // Simpan halaman aktif ke localStorage
+    localStorage.setItem("curPage", page);
+
     var ps = document.querySelectorAll(".page");
     for (var i = 0; i < ps.length; i++) ps[i].classList.remove("active");
+
     var ns = document.querySelectorAll(".nav-item, .nav-fab");
     for (var i = 0; i < ns.length; i++) ns[i].classList.remove("active");
 
@@ -212,7 +223,11 @@ function showPage(page) {
         case "riwayat": renderRiwayat(); break;
         case "kategori": renderKatPage(); break;
     }
-    window.scrollTo(0, 0);
+
+    // Hanya scroll ke atas jika user klik navbar (pindah halaman)
+    if (scrollTop === true) {
+        window.scrollTo(0, 0);
+    }
 }
 
 /* =============================================
@@ -281,9 +296,6 @@ function renderGrafik() {
     renderDonutChart(bulan, tahun);
 }
 
-/* =============================================
-   BUBBLE/DOT CHART - Grafik Bulat
-   ============================================= */
 function renderBubbleChart(tahunVal) {
     var box = document.getElementById("monthlyChart");
     var now = new Date();
@@ -299,18 +311,15 @@ function renderBubbleChart(tahunVal) {
         }
     }
 
-    // Hitung data
     var chartData = [];
     var maxVal = 1;
     for (var i = 0; i < daftar.length; i++) {
-        var bln = daftar[i].bulan;
-        var thn2 = daftar[i].tahun;
+        var bln = daftar[i].bulan, thn2 = daftar[i].tahun;
         var masuk = 0, keluar = 0;
         for (var j = 0; j < TX.length; j++) {
             var dt = new Date(TX[j].tanggal);
             if (dt.getMonth() + 1 === bln && dt.getFullYear() === thn2) {
-                if (TX[j].jenis === "masuk") masuk += TX[j].jumlah;
-                else keluar += TX[j].jumlah;
+                if (TX[j].jenis === "masuk") masuk += TX[j].jumlah; else keluar += TX[j].jumlah;
             }
         }
         var label = new Date(thn2, bln - 1, 1).toLocaleDateString("id-ID", { month: "short" });
@@ -319,48 +328,27 @@ function renderBubbleChart(tahunVal) {
         if (keluar > maxVal) maxVal = keluar;
     }
 
-    // Render dot chart
     var h = "";
     for (var i = 0; i < chartData.length; i++) {
         var d = chartData[i];
-
-        // Ukuran dot berdasarkan nilai (min 18px, max 48px)
         var sizeIn = d.masuk > 0 ? Math.max(18, Math.round((d.masuk / maxVal) * 48)) : 18;
         var sizeOut = d.keluar > 0 ? Math.max(18, Math.round((d.keluar / maxVal) * 48)) : 18;
-
         var classIn = d.masuk > 0 ? "month-dot in" : "month-dot zero";
         var classOut = d.keluar > 0 ? "month-dot out" : "month-dot zero";
 
         h += '<div class="month-col">';
-
-        // Nilai di atas dot
-        if (d.masuk > 0) {
-            h += '<div class="month-val" style="color:var(--s)">' + rpShort(d.masuk) + '</div>';
-        }
+        if (d.masuk > 0) h += '<div class="month-val" style="color:var(--s)">' + rpShort(d.masuk) + '</div>';
         h += '<div class="' + classIn + '" style="width:' + sizeIn + 'px;height:' + sizeIn + 'px" title="Masuk: ' + rp(d.masuk) + '">';
         if (d.masuk === 0) h += '-';
-        h += '</div>';
-
-        // Spacer
-        h += '<div style="height:4px"></div>';
-
-        if (d.keluar > 0) {
-            h += '<div class="month-val" style="color:var(--d)">' + rpShort(d.keluar) + '</div>';
-        }
+        h += '</div><div style="height:4px"></div>';
+        if (d.keluar > 0) h += '<div class="month-val" style="color:var(--d)">' + rpShort(d.keluar) + '</div>';
         h += '<div class="' + classOut + '" style="width:' + sizeOut + 'px;height:' + sizeOut + 'px" title="Keluar: ' + rp(d.keluar) + '">';
         if (d.keluar === 0) h += '-';
-        h += '</div>';
-
-        // Label bulan
-        h += '<div class="month-label">' + d.label + '</div>';
-        h += '</div>';
+        h += '</div><div class="month-label">' + d.label + '</div></div>';
     }
     box.innerHTML = h;
 }
 
-/* =============================================
-   DONUT CHART
-   ============================================= */
 function renderDonutChart(bulan, tahun) {
     var canvas = document.getElementById("donutCanvas");
     var ctx = canvas.getContext("2d");
@@ -435,7 +423,7 @@ function tambahTransaksi(e) {
     document.getElementById("keterangan").value = "";
     document.getElementById("jumlah").value = "";
     document.getElementById("tanggal").valueAsDate = new Date();
-    setTimeout(function () { showPage("dashboard"); }, 800);
+    setTimeout(function () { showPage("dashboard", true); }, 800);
     return false;
 }
 
@@ -612,7 +600,8 @@ function konfirmasiHapus() {
     if (idHapus !== null) {
         var baru = [];
         for (var i = 0; i < TX.length; i++) { if (TX[i].id !== idHapus) baru.push(TX[i]); }
-        TX = baru; simpan(); toast("Dihapus!", "wn"); tutupModal(); showPage(curPage);
+        TX = baru; simpan(); toast("Dihapus!", "wn"); tutupModal();
+        showPage(curPage, false);
     }
 }
 document.getElementById("modalHapus").addEventListener("click", function (e) { if (e.target === this) tutupModal(); });
@@ -622,4 +611,13 @@ document.addEventListener("keydown", function (e) { if (e.key === "Escape") { tu
    SIMPAN & RESIZE
    ============================================= */
 function simpan() { localStorage.setItem("transaksi", JSON.stringify(TX)); }
-window.addEventListener("resize", function () { updateTanggal(); showPage(curPage); });
+
+// Resize: render ulang TANPA scroll ke atas
+var resizeTimer;
+window.addEventListener("resize", function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+        updateTanggal();
+        showPage(curPage, false);
+    }, 300);
+});

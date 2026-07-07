@@ -506,3 +506,33 @@ function simpanData() {
 }
 
 window.addEventListener("resize", renderAll);
+
+/* === AUTO UPDATE - CEK VERSI BARU === */
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.ready.then(function (reg) {
+        /* Cek update setiap buka app */
+        reg.update();
+
+        /* Kalau ada SW baru, langsung aktifkan */
+        reg.addEventListener("updatefound", function () {
+            var newWorker = reg.installing;
+            newWorker.addEventListener("statechange", function () {
+                if (newWorker.state === "activated") {
+                    showToast("Aplikasi diperbarui!", "ok");
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1500);
+                }
+            });
+        });
+    });
+
+    /* Kalau SW baru mengambil alih, reload halaman */
+    var refreshing = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function () {
+        if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+        }
+    });
+}

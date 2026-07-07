@@ -1,4 +1,4 @@
-var CN = "keuangan-v7";
+var CN = "keuangan-v8";
 var urls = [
     "/",
     "index.html",

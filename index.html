@@ -15,368 +15,154 @@
 :root{--p:#4f46e5;--pl:#818cf8;--pd:#3730a3;--s:#10b981;--sl:#d1fae5;--sd:#065f46;--d:#ef4444;--dl:#fee2e2;--dd:#991b1b;--w:#f59e0b;--g0:#f9fafb;--g1:#f3f4f6;--g2:#e5e7eb;--g3:#d1d5db;--g4:#9ca3af;--g5:#6b7280;--g6:#4b5563;--g8:#1f2937}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;color:var(--g8);line-height:1.6;padding-bottom:80px}
-
-/* === HEADER === */
 .hd{background:rgba(255,255,255,.15);backdrop-filter:blur(20px);padding:16px 0;position:sticky;top:0;z-index:100}
 .hc{max-width:1200px;margin:0 auto;padding:0 16px;display:flex;justify-content:space-between;align-items:center}
 .hd h1{color:#fff;font-size:clamp(1.1rem,4vw,1.5rem);font-weight:700}
 .hdate{color:rgba(255,255,255,.95);font-size:clamp(.75rem,2vw,.9rem);background:rgba(255,255,255,.15);padding:6px 12px;border-radius:20px}
-
-/* === CONTAINER === */
 .ct{max-width:1200px;margin:0 auto;padding:16px}
-
-/* === PAGE VIEWS === */
-.page{display:none}
-.page.active{display:block}
-
-/* === FILTER DATE === */
-.filter-date{display:flex;gap:8px;padding:0 16px 12px}
-.filter-date select{flex:1;padding:8px 12px;border:2px solid var(--g2);border-radius:8px;font-size:.85rem;outline:none;background:var(--g0)}
-.filter-date select:focus{border-color:var(--pl)}
-
-/* === BOTTOM NAVBAR === */
-.navbar{position:fixed;bottom:0;left:0;right:0;background:#fff;box-shadow:0 -2px 20px rgba(0,0,0,.1);z-index:200;padding:0;padding-bottom:env(safe-area-inset-bottom)}
-.nav-inner{display:flex;justify-content:space-around;align-items:flex-end;max-width:600px;margin:0 auto;position:relative}
+@media(min-width:768px){.ct{padding:24px 20px 40px}}
+.page{display:none}.page.active{display:block}
+.navbar{position:fixed;bottom:0;left:0;right:0;background:#fff;box-shadow:0 -2px 20px rgba(0,0,0,.1);z-index:200;padding-bottom:env(safe-area-inset-bottom)}
+.nav-inner{display:flex;justify-content:space-around;align-items:flex-end;max-width:600px;margin:0 auto}
 .nav-item{display:flex;flex-direction:column;align-items:center;padding:8px 0 6px;cursor:pointer;border:none;background:none;color:var(--g4);font-size:.65rem;font-weight:600;flex:1;transition:all .2s;position:relative}
-.nav-item.active{color:var(--p)}
-.nav-item .nav-icon{font-size:1.3rem;margin-bottom:2px;transition:all .2s}
-.nav-item.active .nav-icon{transform:scale(1.1)}
-.nav-item.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:30px;height:3px;background:var(--p);border-radius:0 0 3px 3px}
-.nav-fab{display:flex;flex-direction:column;align-items:center;cursor:pointer;border:none;background:none;color:var(--g4);font-size:.65rem;font-weight:600;flex:1;padding:8px 0 6px;position:relative}
-.fab-circle{width:52px;height:52px;background:linear-gradient(135deg,var(--p),var(--pd));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.8rem;font-weight:300;box-shadow:0 4px 15px rgba(79,70,229,.4);position:absolute;top:-22px;transition:all .2s}
-.fab-circle:active{transform:scale(.93)}
-.nav-fab span{margin-top:32px;color:var(--g4);font-size:.65rem;font-weight:600}
-.nav-fab.active span{color:var(--p)}
-
-/* === SALDO CARDS === */
-.sc{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px}
-@media(min-width:500px){.sc{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:900px){.sc{grid-template-columns:repeat(3,1fr)}}
-.s{background:#fff;border-radius:12px;padding:18px;box-shadow:0 4px 6px rgba(0,0,0,.07);position:relative;overflow:hidden}
-.s::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
-.s.t::before{background:linear-gradient(90deg,var(--p),var(--pl))}
-.s.m::before{background:linear-gradient(90deg,var(--s),#34d399)}
-.s.k::before{background:linear-gradient(90deg,var(--d),#f87171)}
-.si{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:10px}
-.s.t .si{background:#eef2ff}.s.m .si{background:var(--sl)}.s.k .si{background:var(--dl)}
-.sl{font-size:.85rem;color:var(--g5);font-weight:500;margin-bottom:4px}
-.sv{font-size:clamp(1.3rem,4vw,1.6rem);font-weight:800}
-.s.t .sv{color:var(--pd)}.s.m .sv{color:var(--sd)}.s.k .sv{color:var(--dd)}
-.sn{font-size:.78rem;color:var(--g4);margin-top:4px}
-
-/* === PANEL === */
+.nav-item.active{color:var(--p)}.nav-item .nav-icon{font-size:1.3rem;margin-bottom:2px}.nav-item.active .nav-icon{transform:scale(1.1)}.nav-item.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:30px;height:3px;background:var(--p);border-radius:0 0 3px 3px}
+.nav-fab{display:flex;flex-direction:column;align-items:center;cursor:pointer;border:none;background:none;font-size:.65rem;font-weight:600;flex:1;padding:8px 0 6px;position:relative}
+.fab-circle{width:52px;height:52px;background:linear-gradient(135deg,var(--p),var(--pd));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.8rem;box-shadow:0 4px 15px rgba(79,70,229,.4);position:absolute;top:-22px}.fab-circle:active{transform:scale(.93)}
+.nav-fab span{margin-top:32px;color:var(--g4)}.nav-fab.active span{color:var(--p)}
+.sc{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px}@media(min-width:500px){.sc{grid-template-columns:repeat(2,1fr)}}@media(min-width:900px){.sc{grid-template-columns:repeat(3,1fr)}}
+.s{background:#fff;border-radius:12px;padding:18px;box-shadow:0 4px 6px rgba(0,0,0,.07);position:relative;overflow:hidden}.s::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}.s.t::before{background:linear-gradient(90deg,var(--p),var(--pl))}.s.m::before{background:linear-gradient(90deg,var(--s),#34d399)}.s.k::before{background:linear-gradient(90deg,var(--d),#f87171)}
+.si{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:10px}.s.t .si{background:#eef2ff}.s.m .si{background:var(--sl)}.s.k .si{background:var(--dl)}
+.sl{font-size:.85rem;color:var(--g5);font-weight:500;margin-bottom:4px}.sv{font-size:clamp(1.3rem,4vw,1.6rem);font-weight:800}.s.t .sv{color:var(--pd)}.s.m .sv{color:var(--sd)}.s.k .sv{color:var(--dd)}.sn{font-size:.78rem;color:var(--g4);margin-top:4px}
 .pn{background:#fff;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,.07);overflow:hidden;margin-bottom:16px}
-.ph{padding:14px 16px;border-bottom:1px solid var(--g2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:center}
-.ph h2{font-size:1.05rem;color:var(--g8)}
-.pb{padding:16px}
-
-/* === TABS === */
+.ph{padding:14px 16px;border-bottom:1px solid var(--g2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:center}.ph h2{font-size:1.05rem;color:var(--g8)}.pb{padding:16px}
 .tabs{display:flex;border-bottom:2px solid var(--g2);margin-bottom:16px}
-.tb{flex:1;padding:12px 8px;border:none;background:none;font-size:.95rem;font-weight:600;color:var(--g4);cursor:pointer;position:relative}
-.tb.a{color:var(--p)}
-.tb.a::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:3px;background:var(--p);border-radius:3px 3px 0 0}
-
-/* === FORM === */
-.fg{margin-bottom:14px}
-.fg label{display:flex;align-items:center;justify-content:space-between;font-size:.85rem;font-weight:600;color:var(--g6);margin-bottom:6px}
-.fg input,.fg select{width:100%;padding:11px 12px;border:2px solid var(--g2);border-radius:8px;font-size:.95rem;outline:none;background:var(--g0)}
-.fg input:focus,.fg select:focus{border-color:var(--pl);background:#fff;box-shadow:0 0 0 3px rgba(79,70,229,.1)}
-.bt{padding:12px 20px;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;transition:all .2s}
-.bp{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff}
-.bs{background:linear-gradient(135deg,var(--s),#059669);color:#fff}
-.bt:active{transform:scale(.98)}
-
-/* === FILTER === */
-.fb{display:flex;gap:6px}
-.ff{padding:6px 14px;border:2px solid var(--g2);border-radius:20px;background:#fff;font-size:.82rem;font-weight:600;color:var(--g5);cursor:pointer}
-.ff.a{border-color:var(--p);color:var(--p);background:#eef2ff}
-
-/* === SEARCH === */
-.sb{position:relative;margin-bottom:14px}
-.sb input{width:100%;padding:10px 14px 10px 36px;border:2px solid var(--g2);border-radius:8px;font-size:.9rem;outline:none;background:var(--g0)}
-.sb input:focus{border-color:var(--pl);background:#fff}
-.sb::before{content:'\01F50D';position:absolute;left:10px;top:50%;transform:translateY(-50%)}
-
-/* === TRANSACTION LIST === */
-.tl{max-height:calc(100vh - 280px);overflow-y:auto;-webkit-overflow-scrolling:touch}
-.tl::-webkit-scrollbar{width:4px}
-.tl::-webkit-scrollbar-thumb{background:var(--g3);border-radius:3px}
+.tb{flex:1;padding:12px 8px;border:none;background:none;font-size:.95rem;font-weight:600;color:var(--g4);cursor:pointer;position:relative}.tb.a{color:var(--p)}.tb.a::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:3px;background:var(--p);border-radius:3px 3px 0 0}
+.fg{margin-bottom:14px}.fg label{display:flex;align-items:center;justify-content:space-between;font-size:.85rem;font-weight:600;color:var(--g6);margin-bottom:6px}
+.fg input,.fg select{width:100%;padding:11px 12px;border:2px solid var(--g2);border-radius:8px;font-size:.95rem;outline:none;background:var(--g0)}.fg input:focus,.fg select:focus{border-color:var(--pl);background:#fff;box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.bt{padding:12px 20px;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}.bp{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff}.bs{background:linear-gradient(135deg,var(--s),#059669);color:#fff}.bt:active{transform:scale(.98)}
+.fb{display:flex;gap:6px}.ff{padding:6px 14px;border:2px solid var(--g2);border-radius:20px;background:#fff;font-size:.82rem;font-weight:600;color:var(--g5);cursor:pointer}.ff.a{border-color:var(--p);color:var(--p);background:#eef2ff}
+.sb{position:relative;margin-bottom:14px}.sb input{width:100%;padding:10px 14px 10px 36px;border:2px solid var(--g2);border-radius:8px;font-size:.9rem;outline:none;background:var(--g0)}.sb input:focus{border-color:var(--pl);background:#fff}.sb::before{content:'\01F50D';position:absolute;left:10px;top:50%;transform:translateY(-50%)}
+.tl{max-height:calc(100vh - 340px);overflow-y:auto;-webkit-overflow-scrolling:touch}.tl::-webkit-scrollbar{width:4px}.tl::-webkit-scrollbar-thumb{background:var(--g3);border-radius:3px}
 .ti{display:flex;align-items:center;padding:12px;border-bottom:1px solid var(--g1);gap:10px}
-.tic{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-.tic.m{background:var(--sl)}.tic.k{background:var(--dl)}
-.tif{flex:1;min-width:0}
-.tn{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tm{font-size:.78rem;color:var(--g4);display:flex;gap:6px;margin-top:2px}
-.tg{padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600}
-.tg.m{background:var(--sl);color:var(--sd)}.tg.k{background:var(--dl);color:var(--dd)}
-.ta{font-weight:700;font-size:.95rem;white-space:nowrap}
-.ta.m{color:var(--s)}.ta.k{color:var(--d)}
-.db{background:none;border:none;color:var(--g3);cursor:pointer;font-size:1rem;padding:4px;border-radius:6px}
-.es{text-align:center;padding:30px 20px;color:var(--g4)}
-.ei{font-size:2.5rem;margin-bottom:10px}
-
-/* === CHART === */
-.chart-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.chart-card{background:#fff;border-radius:12px;padding:16px;text-align:center;box-shadow:0 4px 6px rgba(0,0,0,.07)}
-.chart-card .cc-label{font-size:.8rem;color:var(--g5);margin-bottom:4px}
-.chart-card .cc-value{font-size:1.3rem;font-weight:800}
-.chart-card.income .cc-value{color:var(--sd)}
-.chart-card.expense .cc-value{color:var(--dd)}
-.donut-container{display:flex;justify-content:center;margin:20px 0}
-.donut-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
-.donut-legend-item{display:flex;align-items:center;gap:4px;font-size:.78rem;color:var(--g6)}
-.donut-legend-item .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.monthly-bar{display:flex;align-items:flex-end;gap:6px;height:150px;padding:0 10px;margin:20px 0}
-.month-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
-.month-bar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .5s}
-.month-bar.in{background:var(--s)}
-.month-bar.out{background:var(--d)}
-.month-label{font-size:.65rem;color:var(--g5);font-weight:600;margin-top:4px}
-
-/* === KATEGORI === */
-.kat-card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 4px 6px rgba(0,0,0,.07)}
-.kat-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.kat-name{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:8px}
-.kat-amount{font-weight:800;font-size:1.1rem;color:var(--dd)}
-.kat-persen{font-size:.8rem;color:var(--g5)}
-.kat-bar{width:100%;height:8px;background:var(--g1);border-radius:4px;overflow:hidden;margin-top:8px}
-.kat-fill{height:100%;border-radius:4px;transition:width .8s}
-.kat-count{font-size:.75rem;color:var(--g4);margin-top:6px}
-
-/* === TOAST === */
-.tc{position:fixed;top:10px;right:10px;left:10px;z-index:1000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-@media(min-width:768px){.tc{left:auto}}
-.ts{padding:12px 16px;border-radius:8px;color:#fff;font-weight:600;font-size:.9rem;box-shadow:0 10px 25px rgba(0,0,0,.1);animation:si .3s ease,fo .3s ease 2.7s;display:flex;align-items:center;gap:8px;pointer-events:auto}
-.ts.ok{background:var(--s)}.ts.er{background:var(--d)}.ts.wn{background:var(--w)}
-@keyframes si{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-@keyframes fo{from{opacity:1}to{opacity:0}}
-
-/* === MODALS === */
-.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:500;justify-content:center;align-items:center;padding:20px}
-.mo.a{display:flex}
-.md{background:#fff;border-radius:12px;padding:24px;max-width:400px;width:100%;text-align:center;animation:mi .3s ease}
-@keyframes mi{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
-.md h3{font-size:1.1rem;margin-bottom:16px;color:var(--g8)}
-.md p{color:var(--g5);margin-bottom:20px;font-size:.9rem}
-.ma{display:flex;gap:10px;flex-direction:column}
-@media(min-width:500px){.ma{flex-direction:row}}
-.ma .bt{flex:1}
-.bc{background:var(--g1);color:var(--g6)}
-.bd{background:var(--d);color:#fff}
-.md-kat{max-width:480px;text-align:left;max-height:90vh;overflow-y:auto}
-.md-kat h3{text-align:center}
-.kat-tabs{display:flex;gap:6px;margin-bottom:16px}
-.kat-tab{flex:1;padding:8px;border:2px solid var(--g2);border-radius:8px;background:#fff;font-weight:600;font-size:.85rem;cursor:pointer;text-align:center;color:var(--g5)}
-.kat-tab.a{border-color:var(--p);color:var(--p);background:#eef2ff}
-.kat-add{display:flex;gap:8px;margin-bottom:16px}
-.kat-add input{flex:1;padding:10px 12px;border:2px solid var(--g2);border-radius:8px;font-size:.9rem;outline:none}
-.kat-add input:focus{border-color:var(--pl)}
-.kat-add button{padding:10px 16px;background:var(--p);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap;font-size:.85rem}
-.kat-list{list-style:none}
-.kat-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin:4px 0;background:var(--g0);border-radius:8px;font-size:.9rem}
-.kat-item span{flex:1}
-.kat-del{background:none;border:none;color:var(--g3);cursor:pointer;font-size:1.1rem;padding:2px 6px;border-radius:4px}
-.kat-del:hover{color:var(--d);background:var(--dl)}
-.kat-empty{text-align:center;padding:20px;color:var(--g4);font-size:.85rem}
-.gear-btn{background:none;border:none;cursor:pointer;font-size:1rem;padding:2px 6px;border-radius:4px;color:var(--g4)}
-.gear-btn:hover{color:var(--p);background:#eef2ff}
-.pf{padding:12px 16px;background:var(--g0);border-top:1px solid var(--g2);text-align:center;font-size:.8rem;color:var(--g4)}
-
-/* === INSTALL BANNER === */
-.ib{position:fixed;bottom:80px;left:0;right:0;background:#fff;padding:16px;box-shadow:0 -4px 12px rgba(0,0,0,.15);z-index:150;transition:transform .3s;transform:translateY(200px)}
-.ib.sh{transform:translateY(0)}
-.bic{width:48px;height:48px;background:var(--p);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
-.ib-inner{display:flex;align-items:center;gap:12px}
-.bco{flex:1}
-.bti{font-weight:700;font-size:.95rem}
-.btx{font-size:.8rem;color:var(--g5)}
-.bac{display:flex;gap:8px}
-.bin{padding:8px 16px;background:var(--p);color:#fff;border:none;border-radius:6px;font-weight:600;font-size:.85rem;cursor:pointer}
-.bcl{padding:8px 12px;background:var(--g1);color:var(--g6);border:none;border-radius:6px;font-weight:600;cursor:pointer}
-
-/* === RESPONSIVE === */
-@media(min-width:768px){
-    .navbar{left:50%;transform:translateX(-50%);max-width:500px;border-radius:16px 16px 0 0;box-shadow:0 -4px 30px rgba(0,0,0,.15)}
-}
+.tic{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}.tic.m{background:var(--sl)}.tic.k{background:var(--dl)}
+.tif{flex:1;min-width:0}.tn{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tm{font-size:.78rem;color:var(--g4);display:flex;gap:6px;margin-top:2px}
+.tg{padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:600}.tg.m{background:var(--sl);color:var(--sd)}.tg.k{background:var(--dl);color:var(--dd)}
+.ta{font-weight:700;font-size:.95rem;white-space:nowrap}.ta.m{color:var(--s)}.ta.k{color:var(--d)}.db{background:none;border:none;color:var(--g3);cursor:pointer;font-size:1rem;padding:4px;border-radius:6px}
+.es{text-align:center;padding:30px 20px;color:var(--g4)}.ei{font-size:2.5rem;margin-bottom:10px}
+.chart-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}.chart-card{background:#fff;border-radius:12px;padding:16px;text-align:center;box-shadow:0 4px 6px rgba(0,0,0,.07)}.chart-card .cc-label{font-size:.8rem;color:var(--g5);margin-bottom:4px}.chart-card .cc-value{font-size:1.2rem;font-weight:800}.chart-card.income .cc-value{color:var(--sd)}.chart-card.expense .cc-value{color:var(--dd)}
+.monthly-bar{display:flex;align-items:flex-end;gap:4px;height:150px;padding:0 4px;margin:16px 0}.month-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}.month-bar{width:100%;border-radius:3px 3px 0 0;min-height:3px}.month-bar.in{background:var(--s)}.month-bar.out{background:var(--d)}.month-label{font-size:.6rem;color:var(--g5);font-weight:600;margin-top:4px}
+.chart-legend{display:flex;justify-content:center;gap:16px;margin:8px 0;font-size:.78rem;color:var(--g5)}.legend-dot{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:4px}
+.donut-container{display:flex;justify-content:center;margin:20px 0}.donut-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}.donut-legend-item{display:flex;align-items:center;gap:4px;font-size:.78rem;color:var(--g6)}.donut-legend-item .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.filter-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}.filter-label{font-size:.78rem;font-weight:600;color:var(--g5);white-space:nowrap}.filter-select{flex:1;padding:8px 10px;border:2px solid var(--g2);border-radius:8px;font-size:.85rem;outline:none;background:var(--g0);cursor:pointer}.filter-select:focus{border-color:var(--pl)}
+.kat-card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 4px 6px rgba(0,0,0,.07)}.kat-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.kat-name{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:8px}.kat-amount{font-weight:800;font-size:1.1rem;color:var(--dd)}.kat-persen{font-size:.8rem;color:var(--g5)}.kat-bar{width:100%;height:8px;background:var(--g1);border-radius:4px;overflow:hidden;margin-top:8px}.kat-fill{height:100%;border-radius:4px}.kat-count{font-size:.75rem;color:var(--g4);margin-top:6px}
+.tc{position:fixed;top:10px;right:10px;left:10px;z-index:1000;display:flex;flex-direction:column;gap:8px;pointer-events:none}@media(min-width:768px){.tc{left:auto}}.ts{padding:12px 16px;border-radius:8px;color:#fff;font-weight:600;font-size:.9rem;box-shadow:0 10px 25px rgba(0,0,0,.1);animation:si .3s ease,fo .3s ease 2.7s;display:flex;align-items:center;gap:8px;pointer-events:auto}.ts.ok{background:var(--s)}.ts.er{background:var(--d)}.ts.wn{background:var(--w)}@keyframes si{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}@keyframes fo{from{opacity:1}to{opacity:0}}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:500;justify-content:center;align-items:center;padding:20px}.mo.a{display:flex}.md{background:#fff;border-radius:12px;padding:24px;max-width:400px;width:100%;text-align:center;animation:mi .3s ease}@keyframes mi{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}.md h3{font-size:1.1rem;margin-bottom:16px}.md p{color:var(--g5);margin-bottom:20px;font-size:.9rem}.ma{display:flex;gap:10px;flex-direction:column}@media(min-width:500px){.ma{flex-direction:row}}.ma .bt{flex:1}.bc{background:var(--g1);color:var(--g6)}.bd{background:var(--d);color:#fff}
+.md-kat{max-width:480px;text-align:left;max-height:90vh;overflow-y:auto}.md-kat h3{text-align:center}.kat-tabs{display:flex;gap:6px;margin-bottom:16px}.kat-tab{flex:1;padding:8px;border:2px solid var(--g2);border-radius:8px;background:#fff;font-weight:600;font-size:.85rem;cursor:pointer;text-align:center;color:var(--g5)}.kat-tab.a{border-color:var(--p);color:var(--p);background:#eef2ff}
+.kat-add{display:flex;gap:8px;margin-bottom:16px}.kat-add input{flex:1;padding:10px 12px;border:2px solid var(--g2);border-radius:8px;font-size:.9rem;outline:none}.kat-add input:focus{border-color:var(--pl)}.kat-add button{padding:10px 16px;background:var(--p);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap;font-size:.85rem}
+.kat-list{list-style:none}.kat-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin:4px 0;background:var(--g0);border-radius:8px;font-size:.9rem}.kat-item span{flex:1}.kat-del{background:none;border:none;color:var(--g3);cursor:pointer;font-size:1.1rem;padding:2px 6px;border-radius:4px}.kat-del:hover{color:var(--d);background:var(--dl)}.kat-empty{text-align:center;padding:20px;color:var(--g4);font-size:.85rem}
+.gear-btn{background:none;border:none;cursor:pointer;font-size:1rem;padding:2px 6px;border-radius:4px;color:var(--g4)}.gear-btn:hover{color:var(--p);background:#eef2ff}
+.ib{position:fixed;bottom:80px;left:0;right:0;background:#fff;padding:16px;box-shadow:0 -4px 12px rgba(0,0,0,.15);z-index:150;transition:transform .3s;transform:translateY(200px)}.ib.sh{transform:translateY(0)}.ib-inner{display:flex;align-items:center;gap:12px}.bic{width:48px;height:48px;background:var(--p);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}.bco{flex:1}.bti{font-weight:700;font-size:.95rem}.btx{font-size:.8rem;color:var(--g5)}.bac{display:flex;gap:8px}.bin{padding:8px 16px;background:var(--p);color:#fff;border:none;border-radius:6px;font-weight:600;font-size:.85rem;cursor:pointer}.bcl{padding:8px 12px;background:var(--g1);color:var(--g6);border:none;border-radius:6px;font-weight:600;cursor:pointer}
+@media(min-width:768px){.navbar{left:50%;transform:translateX(-50%);max-width:500px;border-radius:16px 16px 0 0;box-shadow:0 -4px 30px rgba(0,0,0,.15)}}
 </style>
 </head>
 <body>
 
-<!-- INSTALL BANNER -->
-<div class="ib" id="installBanner">
-    <div class="ib-inner">
-        <div class="bic">&#128188;</div>
-        <div class="bco"><div class="bti">Install Aplikasi</div><div class="btx">Akses cepat &amp; offline</div></div>
-        <div class="bac"><button class="bin" id="btnInstallApp">Install</button><button class="bcl" id="btnCloseBanner">&#10005;</button></div>
-    </div>
-</div>
+<div class="ib" id="installBanner"><div class="ib-inner"><div class="bic">&#128188;</div><div class="bco"><div class="bti">Install Aplikasi</div><div class="btx">Akses cepat &amp; offline</div></div><div class="bac"><button class="bin" id="btnInstallApp">Install</button><button class="bcl" id="btnCloseBanner">&#10005;</button></div></div></div>
 
-<!-- HEADER -->
-<div class="hd">
-    <div class="hc">
-        <h1 id="pageTitle">&#128188; Dashboard</h1>
-        <div class="hdate" id="currentDate"></div>
-    </div>
-</div>
+<div class="hd"><div class="hc"><h1 id="pageTitle">&#128188; Dashboard</h1><div class="hdate" id="currentDate"></div></div></div>
 
 <div class="ct">
 
-    <!-- ========== PAGE 1: DASHBOARD ========== -->
-    <div class="page active" id="pageDashboard">
-        <div class="sc">
-            <div class="s t"><div class="si">&#128179;</div><div class="sl">Saldo Akhir</div><div class="sv" id="saldoAkhir">Rp 0</div><div class="sn" id="totalTransaksi">0 transaksi</div></div>
-            <div class="s m"><div class="si">&#128200;</div><div class="sl">Total Pemasukan</div><div class="sv" id="totalMasuk">Rp 0</div><div class="sn" id="countMasuk">0 transaksi</div></div>
-            <div class="s k"><div class="si">&#128201;</div><div class="sl">Total Pengeluaran</div><div class="sv" id="totalKeluar">Rp 0</div><div class="sn" id="countKeluar">0 transaksi</div></div>
-        </div>
-        <div class="pn">
-            <div class="ph"><h2>Transaksi Terakhir</h2></div>
-            <div id="recentList"></div>
-        </div>
-    </div>
+<!-- DASHBOARD -->
+<div class="page active" id="pageDashboard">
+<div class="sc">
+<div class="s t"><div class="si">&#128179;</div><div class="sl">Saldo Akhir</div><div class="sv" id="saldoAkhir">Rp 0</div><div class="sn" id="totalTransaksi">0 transaksi</div></div>
+<div class="s m"><div class="si">&#128200;</div><div class="sl">Total Pemasukan</div><div class="sv" id="totalMasuk">Rp 0</div><div class="sn" id="countMasuk">0 transaksi</div></div>
+<div class="s k"><div class="si">&#128201;</div><div class="sl">Total Pengeluaran</div><div class="sv" id="totalKeluar">Rp 0</div><div class="sn" id="countKeluar">0 transaksi</div></div>
+</div>
+<div class="pn"><div class="ph"><h2>Transaksi Terakhir</h2></div><div id="recentList"></div></div>
+</div>
 
-    <!-- ========== PAGE 2: GRAFIK ========== -->
-    <div class="page" id="pageGrafik">
-        <div class="chart-summary">
-            <div class="chart-card income"><div class="cc-label">Pemasukan Bulan Ini</div><div class="cc-value" id="chartMasuk">Rp 0</div></div>
-            <div class="chart-card expense"><div class="cc-label">Pengeluaran Bulan Ini</div><div class="cc-value" id="chartKeluar">Rp 0</div></div>
-        </div>
-        <!-- FILTER TANGGAL GRAFIK -->
-        <div class="filter-date">
-            <select id="filterBulanGrafik" onchange="setFilterTanggalGrafik()">
-                <option value="">Semua Bulan</option>
-            </select>
-            <select id="filterTahunGrafik" onchange="setFilterTanggalGrafik()">
-                <option value="">Semua Tahun</option>
-            </select>
-        </div>
-        <div class="pn">
-            <div class="ph"><h2>Grafik Bulanan</h2></div>
-            <div class="pb">
-                <div class="monthly-bar" id="monthlyChart"></div>
-                <div style="display:flex;justify-content:center;gap:16px;margin-top:8px">
-                    <span style="display:flex;align-items:center;gap:4px;font-size:.78rem;color:var(--g5)"><span style="width:10px;height:10px;border-radius:2px;background:var(--s)"></span> Masuk</span>
-                    <span style="display:flex;align-items:center;gap:4px;font-size:.78rem;color:var(--g5)"><span style="width:10px;height:10px;border-radius:2px;background:var(--d)"></span> Keluar</span>
-                </div>
-            </div>
-        </div>
-        <div class="pn">
-            <div class="ph"><h2>Donut Pengeluaran</h2></div>
-            <div class="pb">
-                <div class="donut-container"><canvas id="donutCanvas" width="200" height="200"></canvas></div>
-                <div class="donut-legend" id="donutLegend"></div>
-            </div>
-        </div>
-    </div>
+<!-- GRAFIK -->
+<div class="page" id="pageGrafik">
+<div class="pn">
+<div class="ph"><h2>&#128202; Grafik Keuangan</h2></div>
+<div class="pb">
+<div class="filter-row"><span class="filter-label">Bulan:</span><select class="filter-select" id="grafikBulan" onchange="renderGrafik()"></select></div>
+<div class="filter-row"><span class="filter-label">Tahun:</span><select class="filter-select" id="grafikTahun" onchange="renderGrafik()"></select></div>
+<div class="chart-summary">
+<div class="chart-card income"><div class="cc-label" id="lblMasuk">Pemasukan</div><div class="cc-value" id="chartMasuk">Rp 0</div></div>
+<div class="chart-card expense"><div class="cc-label" id="lblKeluar">Pengeluaran</div><div class="cc-value" id="chartKeluar">Rp 0</div></div>
+</div>
+<h3 style="font-size:.9rem;color:var(--g6);margin:16px 0 4px">Grafik Bulanan</h3>
+<div class="monthly-bar" id="monthlyChart"></div>
+<div class="chart-legend"><span><span class="legend-dot" style="background:var(--s)"></span>Masuk</span><span><span class="legend-dot" style="background:var(--d)"></span>Keluar</span></div>
+<h3 style="font-size:.9rem;color:var(--g6);margin:20px 0 4px">Donut Pengeluaran</h3>
+<div class="donut-container"><canvas id="donutCanvas" width="200" height="200"></canvas></div>
+<div class="donut-legend" id="donutLegend"></div>
+</div>
+</div>
+</div>
 
-    <!-- ========== PAGE 3: INPUT DATA ========== -->
-    <div class="page" id="pageInput">
-        <div class="pn">
-            <div class="tabs">
-                <button class="tb a" onclick="switchTab('masuk')" id="tabMasuk">&#128176; Pemasukan</button>
-                <button class="tb" onclick="switchTab('keluar')" id="tabKeluar">&#128184; Pengeluaran</button>
-            </div>
-            <div class="pb">
-                <form id="formTransaksi" onsubmit="return tambahTransaksi(event)">
-                    <input type="hidden" id="jenisTransaksi" value="masuk">
-                    <div class="fg"><label>Keterangan</label><input type="text" id="keterangan" placeholder="Contoh: Gaji bulanan" required></div>
-                    <div class="fg"><label>Jumlah (Rp)</label><input type="text" inputmode="numeric" id="jumlah" placeholder="5.000.000" oninput="formatInputJumlah(this)" required></div>
-                    <div class="fg"><label>Kategori <button type="button" class="gear-btn" onclick="bukaKategori()" title="Edit Kategori">&#9881;&#65039;</button></label><select id="kategori"></select></div>
-                    <div class="fg"><label>Tanggal</label><input type="date" id="tanggal"></div>
-                    <button type="submit" class="bt bs" id="btnSubmit">&#10133; Tambah Pemasukan</button>
-                </form>
-            </div>
-        </div>
-    </div>
+<!-- INPUT -->
+<div class="page" id="pageInput">
+<div class="pn">
+<div class="tabs">
+<button class="tb a" onclick="switchTab('masuk')" id="tabMasuk">&#128176; Pemasukan</button>
+<button class="tb" onclick="switchTab('keluar')" id="tabKeluar">&#128184; Pengeluaran</button>
+</div>
+<div class="pb">
+<form id="formTransaksi" onsubmit="return tambahTransaksi(event)">
+<input type="hidden" id="jenisTransaksi" value="masuk">
+<div class="fg"><label>Keterangan</label><input type="text" id="keterangan" placeholder="Contoh: Gaji bulanan" required></div>
+<div class="fg"><label>Jumlah (Rp)</label><input type="text" inputmode="numeric" id="jumlah" placeholder="5.000.000" oninput="formatInputJumlah(this)" required></div>
+<div class="fg"><label>Kategori <button type="button" class="gear-btn" onclick="bukaKategori()">&#9881;&#65039;</button></label><select id="kategori"></select></div>
+<div class="fg"><label>Tanggal</label><input type="date" id="tanggal"></div>
+<button type="submit" class="bt bs" id="btnSubmit">+ Tambah Pemasukan</button>
+</form>
+</div>
+</div>
+</div>
 
-    <!-- ========== PAGE 4: RIWAYAT ========== -->
-    <div class="page" id="pageRiwayat">
-        <div class="pn">
-            <div class="ph">
-                <h2>Semua Transaksi</h2>
-                <div class="fb">
-                    <button class="ff a" onclick="setFilter('semua',this)">Semua</button>
-                    <button class="ff" onclick="setFilter('masuk',this)">Masuk</button>
-                    <button class="ff" onclick="setFilter('keluar',this)">Keluar</button>
-                </div>
-            </div>
-            <!-- FILTER TANGGAL RIWAYAT -->
-            <div class="filter-date">
-                <select id="filterBulanRiwayat" onchange="setFilterTanggalRiwayat()">
-                    <option value="">Semua Bulan</option>
-                </select>
-                <select id="filterTahunRiwayat" onchange="setFilterTanggalRiwayat()">
-                    <option value="">Semua Tahun</option>
-                </select>
-            </div>
-            <div style="padding:0 16px 0"><div class="sb"><input type="text" id="searchInput" placeholder="Cari transaksi..." oninput="renderTransaksi()"></div></div>
-            <div class="tl" id="transactionList"><div class="es"><div class="ei">&#128237;</div><p>Belum ada transaksi.</p></div></div>
-        </div>
-    </div>
+<!-- RIWAYAT -->
+<div class="page" id="pageRiwayat">
+<div class="pn">
+<div class="ph">
+<h2>Riwayat Transaksi</h2>
+<div class="fb">
+<button class="ff a" onclick="setJenis('semua',this)">Semua</button>
+<button class="ff" onclick="setJenis('masuk',this)">Masuk</button>
+<button class="ff" onclick="setJenis('keluar',this)">Keluar</button>
+</div>
+</div>
+<div style="padding:14px 16px 0">
+<div class="filter-row"><span class="filter-label">Bulan:</span><select class="filter-select" id="riwayatBulan" onchange="renderRiwayat()"></select></div>
+<div class="filter-row"><span class="filter-label">Tahun:</span><select class="filter-select" id="riwayatTahun" onchange="renderRiwayat()"></select></div>
+</div>
+<div style="padding:10px 16px 0"><div class="sb"><input type="text" id="searchInput" placeholder="Cari transaksi..." oninput="renderRiwayat()"></div></div>
+<div class="tl" id="txList"><div class="es"><div class="ei">&#128237;</div><p>Belum ada transaksi.</p></div></div>
+</div>
+</div>
 
-    <!-- ========== PAGE 5: KATEGORI ========== -->
-    <div class="page" id="pageKategori">
-        <!-- FILTER TANGGAL KATEGORI -->
-        <div class="filter-date">
-            <select id="filterBulanKategori" onchange="setFilterTanggalKategori()">
-                <option value="">Semua Bulan</option>
-            </select>
-            <select id="filterTahunKategori" onchange="setFilterTanggalKategori()">
-                <option value="">Semua Tahun</option>
-            </select>
-        </div>
-        <div id="kategoriCards"></div>
-    </div>
+<!-- KATEGORI -->
+<div class="page" id="pageKategori"><div id="katCards"></div></div>
 
 </div>
 
-<!-- BOTTOM NAVBAR -->
-<div class="navbar">
-    <div class="nav-inner">
-        <button class="nav-item active" onclick="showPage('dashboard')" id="navDashboard">
-            <span class="nav-icon">&#127968;</span>
-            Dashboard
-        </button>
-        <button class="nav-item" onclick="showPage('grafik')" id="navGrafik">
-            <span class="nav-icon">&#128202;</span>
-            Grafik
-        </button>
-        <button class="nav-fab" onclick="showPage('input')" id="navInput">
-            <div class="fab-circle">+</div>
-            <span>Input</span>
-        </button>
-        <button class="nav-item" onclick="showPage('riwayat')" id="navRiwayat">
-            <span class="nav-icon">&#128203;</span>
-            Riwayat
-        </button>
-        <button class="nav-item" onclick="showPage('kategori')" id="navKategori">
-            <span class="nav-icon">&#128202;</span>
-            Kategori
-        </button>
-    </div>
-</div>
+<!-- NAVBAR -->
+<div class="navbar"><div class="nav-inner">
+<button class="nav-item active" onclick="showPage('dashboard')" id="navDashboard"><span class="nav-icon">&#127968;</span>Dashboard</button>
+<button class="nav-item" onclick="showPage('grafik')" id="navGrafik"><span class="nav-icon">&#128202;</span>Grafik</button>
+<button class="nav-fab" onclick="showPage('input')" id="navInput"><div class="fab-circle">+</div><span>Input</span></button>
+<button class="nav-item" onclick="showPage('riwayat')" id="navRiwayat"><span class="nav-icon">&#128203;</span>Riwayat</button>
+<button class="nav-item" onclick="showPage('kategori')" id="navKategori"><span class="nav-icon">&#128202;</span>Kategori</button>
+</div></div>
 
 <!-- MODAL HAPUS -->
-<div class="mo" id="modalHapus">
-    <div class="md">
-        <h3>Hapus Transaksi?</h3>
-        <p id="modalText">Yakin?</p>
-        <div class="ma"><button class="bt bc" onclick="tutupModal()">Batal</button><button class="bt bd" onclick="konfirmasiHapus()">Hapus</button></div>
-    </div>
-</div>
+<div class="mo" id="modalHapus"><div class="md"><h3>Hapus Transaksi?</h3><p id="modalText">Yakin?</p><div class="ma"><button class="bt bc" onclick="tutupModal()">Batal</button><button class="bt bd" onclick="konfirmasiHapus()">Hapus</button></div></div></div>
 
 <!-- MODAL KATEGORI -->
-<div class="mo" id="modalKategori">
-    <div class="md md-kat">
-        <h3>&#9881;&#65039; Edit Kategori</h3>
-        <div class="kat-tabs">
-            <button class="kat-tab a" id="katTabMasuk" onclick="switchKatTab('masuk')">Pemasukan</button>
-            <button class="kat-tab" id="katTabKeluar" onclick="switchKatTab('keluar')">Pengeluaran</button>
-        </div>
-        <div class="kat-add"><input type="text" id="katInput" placeholder="Nama kategori baru..."><button onclick="tambahKategori()">+ Tambah</button></div>
-        <ul class="kat-list" id="katList"></ul>
-        <div style="margin-top:16px"><button class="bt bc" onclick="tutupKategori()">Tutup</button></div>
-    </div>
-</div>
+<div class="mo" id="modalKategori"><div class="md md-kat"><h3>&#9881;&#65039; Edit Kategori</h3><div class="kat-tabs"><button class="kat-tab a" id="katTabM" onclick="switchKatTab('masuk')">Pemasukan</button><button class="kat-tab" id="katTabK" onclick="switchKatTab('keluar')">Pengeluaran</button></div><div class="kat-add"><input type="text" id="katInput" placeholder="Nama kategori baru..."><button onclick="tambahKat()">+ Tambah</button></div><ul class="kat-list" id="katList"></ul><div style="margin-top:16px"><button class="bt bc" onclick="tutupKategori()">Tutup</button></div></div></div>
 
 <div class="tc" id="toastContainer"></div>
 <script src="app.js"></script>

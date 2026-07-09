@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.json">
 <title>Sistem Keuangan</title>
 <style>
-:root{--p:#4f46e5;--pl:#818cf8;--pd:#3730a3;--s:#10b981;--sl:#d1fae5;--sd:#065f46;--d:#ef4444;--dl:#fee2e2;--dd:#991b1b;--w:#f59e0b;--g0:#f9fafb;--g1:#f3f4f6;--g2:#e5e7eb;--g3:#d1d5db;--g4:#9ca3af;--g5:#6b7280;--g6:#4b5563;--g8:#1f2937}
+:root{--p:#4f46e5;--pl:#818cf8;--pd:#3730a3;--s:#10b981;--sl:#d1fae5;--sd:#065f46;--d:#ef4444;--dl:#fee2e2;--dd:#991b1b;--w:#f59e0b;--wl:#fef3c7;--g0:#f9fafb;--g1:#f3f4f6;--g2:#e5e7eb;--g3:#d1d5db;--g4:#9ca3af;--g5:#6b7280;--g6:#4b5563;--g8:#1f2937}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;color:var(--g8);line-height:1.6;padding-bottom:80px}
 .hd{background:rgba(255,255,255,.15);backdrop-filter:blur(20px);padding:16px 0;position:sticky;top:0;z-index:100}
@@ -55,6 +55,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
 .donut-container{display:flex;justify-content:center;margin:20px 0}.donut-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}.donut-legend-item{display:flex;align-items:center;gap:4px;font-size:.78rem;color:var(--g6)}.donut-legend-item .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .filter-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}.filter-label{font-size:.78rem;font-weight:600;color:var(--g5);white-space:nowrap}.filter-select{flex:1;padding:8px 10px;border:2px solid var(--g2);border-radius:8px;font-size:.85rem;outline:none;background:var(--g0);cursor:pointer}.filter-select:focus{border-color:var(--pl)}
 .kat-card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 4px 6px rgba(0,0,0,.07)}.kat-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.kat-name{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:8px}.kat-amount{font-weight:800;font-size:1.1rem;color:var(--dd)}.kat-persen{font-size:.8rem;color:var(--g5)}.kat-bar{width:100%;height:8px;background:var(--g1);border-radius:4px;overflow:hidden;margin-top:8px}.kat-fill{height:100%;border-radius:4px}.kat-count{font-size:.75rem;color:var(--g4);margin-top:6px}
+
+/* BUDGET CARD */
+.budget-section{margin-bottom:16px}
+.budget-card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 4px 6px rgba(0,0,0,.07);margin-bottom:12px;position:relative;overflow:hidden}
+.budget-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.budget-card.safe::before{background:linear-gradient(90deg,var(--s),#34d399)}
+.budget-card.warn::before{background:linear-gradient(90deg,var(--w),#fbbf24)}
+.budget-card.over::before{background:linear-gradient(90deg,var(--d),#f87171)}
+.budget-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.budget-title{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:6px}
+.budget-amount{text-align:right}
+.budget-spent{font-size:.85rem;font-weight:700}
+.budget-limit{font-size:.75rem;color:var(--g4)}
+.budget-bar{width:100%;height:10px;background:var(--g1);border-radius:5px;overflow:hidden;margin:8px 0}
+.budget-fill{height:100%;border-radius:5px;transition:width .5s}
+.budget-fill.safe{background:var(--s)}
+.budget-fill.warn{background:var(--w)}
+.budget-fill.over{background:var(--d)}
+.budget-info{display:flex;justify-content:space-between;font-size:.78rem;color:var(--g5)}
+.budget-status{font-weight:600}
+.budget-status.safe{color:var(--sd)}
+.budget-status.warn{color:#92400e}
+.budget-status.over{color:var(--dd)}
+.budget-empty{text-align:center;padding:20px;color:var(--g4);font-size:.85rem}
+.budget-set-btn{padding:8px 14px;border:2px dashed var(--g3);border-radius:8px;background:none;color:var(--g5);cursor:pointer;font-size:.85rem;font-weight:600;width:100%;text-align:center;transition:all .2s}
+.budget-set-btn:hover{border-color:var(--p);color:var(--p);background:#eef2ff}
+
+/* BUDGET SETTING PAGE */
+.budget-form{margin-bottom:16px}
+.budget-input-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:12px}
+.budget-input-row .fg{flex:1;margin-bottom:0}
+.budget-save-btn{padding:10px 16px;background:var(--p);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.85rem;white-space:nowrap;height:44px}
+.budget-save-btn:active{transform:scale(.97)}
+.budget-list-item{display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--g0);border-radius:8px;margin-bottom:8px}
+.budget-list-info{flex:1}
+.budget-list-label{font-weight:600;font-size:.9rem}
+.budget-list-val{font-size:.8rem;color:var(--g5)}
+.budget-list-del{background:none;border:none;color:var(--g3);cursor:pointer;font-size:1.1rem;padding:4px 8px;border-radius:4px}
+.budget-list-del:hover{color:var(--d);background:var(--dl)}
+
 .tc{position:fixed;top:10px;right:10px;left:10px;z-index:1000;display:flex;flex-direction:column;gap:8px;pointer-events:none}@media(min-width:768px){.tc{left:auto}}.ts{padding:12px 16px;border-radius:8px;color:#fff;font-weight:600;font-size:.9rem;box-shadow:0 10px 25px rgba(0,0,0,.1);animation:si .3s ease,fo .3s ease 2.7s;display:flex;align-items:center;gap:8px;pointer-events:auto}.ts.ok{background:var(--s)}.ts.er{background:var(--d)}.ts.wn{background:var(--w)}@keyframes si{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}@keyframes fo{from{opacity:1}to{opacity:0}}
 .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:500;justify-content:center;align-items:center;padding:20px}.mo.a{display:flex}.md{background:#fff;border-radius:12px;padding:24px;max-width:400px;width:100%;text-align:center;animation:mi .3s ease}@keyframes mi{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}.md h3{font-size:1.1rem;margin-bottom:16px}.md p{color:var(--g5);margin-bottom:20px;font-size:.9rem}.ma{display:flex;gap:10px;flex-direction:column}@media(min-width:500px){.ma{flex-direction:row}}.ma .bt{flex:1}.bc{background:var(--g1);color:var(--g6)}.bd{background:var(--d);color:#fff}
 .md-kat{max-width:480px;text-align:left;max-height:90vh;overflow-y:auto}.md-kat h3{text-align:center}.kat-tabs{display:flex;gap:6px;margin-bottom:16px}.kat-tab{flex:1;padding:8px;border:2px solid var(--g2);border-radius:8px;background:#fff;font-weight:600;font-size:.85rem;cursor:pointer;text-align:center;color:var(--g5)}.kat-tab.a{border-color:var(--p);color:var(--p);background:#eef2ff}
@@ -80,6 +120,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
 <div class="s m"><div class="si">&#128200;</div><div class="sl">Total Pemasukan</div><div class="sv" id="totalMasuk">Rp 0</div><div class="sn" id="countMasuk">0 transaksi</div></div>
 <div class="s k"><div class="si">&#128201;</div><div class="sl">Total Pengeluaran</div><div class="sv" id="totalKeluar">Rp 0</div><div class="sn" id="countKeluar">0 transaksi</div></div>
 </div>
+<!-- Budget Cards di Dashboard -->
+<div class="budget-section" id="budgetDashboard"></div>
 <div class="pn"><div class="ph"><h2>Transaksi Terakhir</h2></div><div id="recentList"></div></div>
 </div>
 
@@ -91,8 +133,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
 <div class="filter-row"><span class="filter-label">Bulan:</span><select class="filter-select" id="grafikBulan" onchange="renderGrafik()"></select></div>
 <div class="filter-row"><span class="filter-label">Tahun:</span><select class="filter-select" id="grafikTahun" onchange="renderGrafik()"></select></div>
 <div class="chart-summary">
-<div class="chart-card income"><div class="cc-label" id="lblMasuk">Pemasukan</div><div class="cc-value" id="chartMasuk">Rp 0</div></div>
-<div class="chart-card expense"><div class="cc-label" id="lblKeluar">Pengeluaran</div><div class="cc-value" id="chartKeluar">Rp 0</div></div>
+<div class="chart-card income"><div class="cc-label">Pemasukan</div><div class="cc-value" id="chartMasuk">Rp 0</div></div>
+<div class="chart-card expense"><div class="cc-label">Pengeluaran</div><div class="cc-value" id="chartKeluar">Rp 0</div></div>
 </div>
 <h3 style="font-size:.9rem;color:var(--g6);margin:16px 0 4px">Grafik Bulanan</h3>
 <div class="monthly-bar" id="monthlyChart"></div>
@@ -144,24 +186,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
 </div>
 </div>
 
-<!-- KATEGORI -->
-<div class="page" id="pageKategori"><div id="katCards"></div></div>
+<!-- KATEGORI + BUDGET (Tabs) -->
+<div class="page" id="pageKategori">
+<div class="pn">
+<div class="tabs">
+<button class="tb a" onclick="switchKatPage('kat')" id="tabKatPage">&#128202; Kategori</button>
+<button class="tb" onclick="switchKatPage('budget')" id="tabBudgetPage">&#127919; Budget</button>
+</div>
+<div id="katPageContent">
+<div id="katCards" style="padding:16px"></div>
+</div>
+<div id="budgetPageContent" style="display:none">
+<div style="padding:16px">
+<h3 style="font-size:.95rem;color:var(--g8);margin-bottom:12px">&#127919; Set Budget</h3>
+<div class="budget-input-row">
+<div class="fg"><label>Tipe</label><select id="budgetTipe"><option value="harian">Harian</option><option value="bulanan">Bulanan</option></select></div>
+<div class="fg"><label>Jumlah (Rp)</label><input type="text" inputmode="numeric" id="budgetJumlah" placeholder="500.000" oninput="formatInputJumlah(this)"></div>
+<button class="budget-save-btn" onclick="simpanBudget()">Simpan</button>
+</div>
+<h3 style="font-size:.95rem;color:var(--g8);margin:16px 0 12px">Budget Aktif</h3>
+<div id="budgetList"></div>
+</div>
+</div>
+</div>
+</div>
 
 </div>
 
 <!-- NAVBAR -->
 <div class="navbar"><div class="nav-inner">
-<button class="nav-item active" onclick="showPage('dashboard')" id="navDashboard"><span class="nav-icon">&#127968;</span>Dashboard</button>
-<button class="nav-item" onclick="showPage('grafik')" id="navGrafik"><span class="nav-icon">&#128202;</span>Grafik</button>
-<button class="nav-fab" onclick="showPage('input')" id="navInput"><div class="fab-circle">+</div><span>Input</span></button>
-<button class="nav-item" onclick="showPage('riwayat')" id="navRiwayat"><span class="nav-icon">&#128203;</span>Riwayat</button>
-<button class="nav-item" onclick="showPage('kategori')" id="navKategori"><span class="nav-icon">&#128202;</span>Kategori</button>
+<button class="nav-item active" onclick="showPage('dashboard',true)" id="navDashboard"><span class="nav-icon">&#127968;</span>Dashboard</button>
+<button class="nav-item" onclick="showPage('grafik',true)" id="navGrafik"><span class="nav-icon">&#128202;</span>Grafik</button>
+<button class="nav-fab" onclick="showPage('input',true)" id="navInput"><div class="fab-circle">+</div><span>Input</span></button>
+<button class="nav-item" onclick="showPage('riwayat',true)" id="navRiwayat"><span class="nav-icon">&#128203;</span>Riwayat</button>
+<button class="nav-item" onclick="showPage('kategori',true)" id="navKategori"><span class="nav-icon">&#127919;</span>Budget</button>
 </div></div>
 
-<!-- MODAL HAPUS -->
 <div class="mo" id="modalHapus"><div class="md"><h3>Hapus Transaksi?</h3><p id="modalText">Yakin?</p><div class="ma"><button class="bt bc" onclick="tutupModal()">Batal</button><button class="bt bd" onclick="konfirmasiHapus()">Hapus</button></div></div></div>
-
-<!-- MODAL KATEGORI -->
 <div class="mo" id="modalKategori"><div class="md md-kat"><h3>&#9881;&#65039; Edit Kategori</h3><div class="kat-tabs"><button class="kat-tab a" id="katTabM" onclick="switchKatTab('masuk')">Pemasukan</button><button class="kat-tab" id="katTabK" onclick="switchKatTab('keluar')">Pengeluaran</button></div><div class="kat-add"><input type="text" id="katInput" placeholder="Nama kategori baru..."><button onclick="tambahKat()">+ Tambah</button></div><ul class="kat-list" id="katList"></ul><div style="margin-top:16px"><button class="bt bc" onclick="tutupKategori()">Tutup</button></div></div></div>
 
 <div class="tc" id="toastContainer"></div>
